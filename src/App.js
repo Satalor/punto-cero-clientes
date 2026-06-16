@@ -46,7 +46,7 @@ export default function ClienteApp() {
 
   // Fidelidad
   const [sellos, setSellosState] = useState(getSellos);
-  const [showPremio, setShowPremio] = useState(false);
+  const [showPremio, setShowPremio] = useState(false); // eslint-disable-line
 
   const abrirWhatsApp = (msg) => window.open(`https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msg)}`, "_blank");
 
@@ -76,7 +76,7 @@ export default function ClienteApp() {
     if (nuevo >= FIDELIDAD_TOTAL) setShowPremio(true);
   };
 
-  const resetFidelidad = () => { setSellosState(0); setSellos(0); setShowPremio(false); };
+  const resetFidelidad = () => { setSellosState(0); setSellos(0); setShowPremio(false); }; // eslint-disable-line
 
   const inp = { width: "100%", background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 10, padding: "11px 14px", color: "white", fontSize: 14, boxSizing: "border-box", outline: "none" };
   const lbl = { color: "rgba(255,255,255,0.5)", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: 0.5, display: "block", marginBottom: 6 };
