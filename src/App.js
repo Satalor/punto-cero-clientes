@@ -5,16 +5,21 @@ import { supabase } from "./supabaseClient";
 const WHATSAPP = "5578944681";
 const VEHICULOS = ["🚗 Compacto / Sedán", "🚙 Camioneta / SUV", "🚐 Van / Pickup"];
 
+// duracionBloque = horas que el servicio bloquea en la agenda (servicio + traslado incluido)
 const CATALOGO = [
-  { id: 1, nombre: "Lavado Exterior", desc: "Carrocería, llantas y vidrios exteriores con hidrolavadora.", duracion: "45 min", icono: "💧", cat: "basico", precios: [299, 349, 399], incluye: ["Lavado con hidrolavadora", "Secado completo", "Limpieza de llantas", "Vidrios exteriores"] },
-  { id: 2, nombre: "Lavado Interior", desc: "Aspirado, tablero, puertas y vidrios interiores.", duracion: "45 min", icono: "🧹", cat: "basico", precios: [299, 349, 399], incluye: ["Aspirado de tapetes y asientos", "Limpieza de tablero", "Limpieza de puertas", "Vidrios interiores"] },
-  { id: 3, nombre: "Detallado Completo", desc: "Interior + exterior. Nuestro servicio más solicitado.", duracion: "2 hrs", icono: "✨", cat: "popular", precios: [549, 649, 749], incluye: ["Todo del lavado exterior", "Todo del lavado interior", "Brillado de llantas", "Ambientador incluido"] },
-  { id: 4, nombre: "Pulido de Pintura", desc: "Elimina rayones superficiales y restaura el brillo original.", duracion: "3-4 hrs", icono: "🔆", cat: "premium", precios: [899, 1099, 1299], incluye: ["Lavado previo", "Pulido con máquina orbital", "Corrección de rayones leves", "Brillo profundo"] },
-  { id: 5, nombre: "Encerado y Protección", desc: "Cera protectora que cuida tu pintura hasta 3 meses.", duracion: "2-3 hrs", icono: "🛡️", cat: "premium", precios: [699, 849, 999], incluye: ["Lavado previo", "Descontaminación de pintura", "Cera carnauba", "Protección 3 meses"] },
-  { id: 6, nombre: "Descontaminación", desc: "Savia, manchas de agua, excremento de aves y más.", duracion: "1.5 hrs", icono: "🧪", cat: "especial", precios: [499, 599, 699], incluye: ["Lavado previo", "Descontaminante químico", "Clay bar", "Enjuague y secado"] },
-  { id: 7, nombre: "Detallado Premium", desc: "Lo mejor de todo. Pulido + encerado + interior y exterior.", duracion: "5-6 hrs", icono: "👑", cat: "premium", precios: [1499, 1799, 2099], incluye: ["Detallado completo", "Pulido de pintura", "Encerado y protección", "Limpieza profunda de tapicería", "Restauración de plásticos", "Ambientador premium"] },
-  { id: 8, nombre: "Limpieza de Tapicería", desc: "Lavado profundo de asientos, tapetes y techo interior.", duracion: "2-3 hrs", icono: "🧽", cat: "especial", precios: [599, 749, 899], incluye: ["Aspirado profundo", "Extracción de manchas", "Limpieza con espuma", "Secado y acondicionado"] },
+  { id: 1, nombre: "Lavado Exterior", desc: "Carrocería, llantas y vidrios exteriores con hidrolavadora.", duracion: "45 min", duracionBloque: 1.5, icono: "💧", cat: "basico", precios: [299, 349, 399], incluye: ["Lavado con hidrolavadora", "Secado completo", "Limpieza de llantas", "Vidrios exteriores"] },
+  { id: 2, nombre: "Lavado Interior", desc: "Aspirado, tablero, puertas y vidrios interiores.", duracion: "45 min", duracionBloque: 1.5, icono: "🧹", cat: "basico", precios: [299, 349, 399], incluye: ["Aspirado de tapetes y asientos", "Limpieza de tablero", "Limpieza de puertas", "Vidrios interiores"] },
+  { id: 3, nombre: "Detallado Completo", desc: "Interior + exterior. Nuestro servicio más solicitado.", duracion: "2 hrs", duracionBloque: 2.5, icono: "✨", cat: "popular", precios: [549, 649, 749], incluye: ["Todo del lavado exterior", "Todo del lavado interior", "Brillado de llantas", "Ambientador incluido"] },
+  { id: 4, nombre: "Pulido de Pintura", desc: "Elimina rayones superficiales y restaura el brillo original.", duracion: "3-4 hrs", duracionBloque: 4.5, icono: "🔆", cat: "premium", precios: [899, 1099, 1299], incluye: ["Lavado previo", "Pulido con máquina orbital", "Corrección de rayones leves", "Brillo profundo"] },
+  { id: 5, nombre: "Encerado y Protección", desc: "Cera protectora que cuida tu pintura hasta 3 meses.", duracion: "2-3 hrs", duracionBloque: 3.5, icono: "🛡️", cat: "premium", precios: [699, 849, 999], incluye: ["Lavado previo", "Descontaminación de pintura", "Cera carnauba", "Protección 3 meses"] },
+  { id: 6, nombre: "Descontaminación", desc: "Savia, manchas de agua, excremento de aves y más.", duracion: "1.5 hrs", duracionBloque: 2.5, icono: "🧪", cat: "especial", precios: [499, 599, 699], incluye: ["Lavado previo", "Descontaminante químico", "Clay bar", "Enjuague y secado"] },
+  { id: 7, nombre: "Detallado Premium", desc: "Lo mejor de todo. Pulido + encerado + interior y exterior.", duracion: "5-6 hrs", duracionBloque: 6.5, icono: "👑", cat: "premium", precios: [1499, 1799, 2099], incluye: ["Detallado completo", "Pulido de pintura", "Encerado y protección", "Limpieza profunda de tapicería", "Restauración de plásticos", "Ambientador premium"] },
+  { id: 8, nombre: "Limpieza de Tapicería", desc: "Lavado profundo de asientos, tapetes y techo interior.", duracion: "2-3 hrs", duracionBloque: 3.5, icono: "🧽", cat: "especial", precios: [599, 749, 899], incluye: ["Aspirado profundo", "Extracción de manchas", "Limpieza con espuma", "Secado y acondicionado"] },
 ];
+
+// Helpers de tiempo: convierten "09:00" <-> minutos desde medianoche, y suman duraciones en horas
+const horaAMinutos = (hhmm) => { const [h, m] = hhmm.split(":").map(Number); return h * 60 + (m || 0); };
+const minutosAHora = (min) => `${String(Math.floor(min / 60)).padStart(2, "0")}:${String(min % 60).padStart(2, "0")}`;
 
 const CAT_STYLE = {
   basico:  { color: "#3b82f6", label: "Básico" },
@@ -45,13 +50,15 @@ export default function ClienteApp() {
 
   // Disponibilidad
   const [horarios, setHorarios] = useState([]);
+  // eslint-disable-next-line no-unused-vars
   const [horasOcupadas, setHorasOcupadas] = useState([]);
   const [horasDisponibles, setHorasDisponibles] = useState([]);
   const [cargandoHoras, setCargandoHoras] = useState(false);
 
   // Fidelidad
   const [sellos, setSellosState] = useState(getSellos);
-  const [showPremio, setShowPremio] = useState(false); // eslint-disable-line no-unused-vars
+  // eslint-disable-next-line no-unused-vars
+  const [showPremio, setShowPremio] = useState(false);
 
   // Cargar configuración de horarios al iniciar
   useEffect(() => {
@@ -62,14 +69,14 @@ export default function ClienteApp() {
     cargarHorarios();
   }, []);
 
-  // Cuando cambia la fecha seleccionada, calcular horas disponibles
+  // Cuando cambia la fecha o el servicio seleccionado, recalcular horas disponibles
   useEffect(() => {
-    if (!agenda.fecha) { setHorasDisponibles([]); return; }
-    calcularHorasDisponibles(agenda.fecha);
-     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [agenda.fecha, horarios]);
+    if (!agenda.fecha || !agenda.servicio) { setHorasDisponibles([]); return; }
+    calcularHorasDisponibles(agenda.fecha, agenda.servicio);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [agenda.fecha, agenda.servicio, horarios]);
 
-  const calcularHorasDisponibles = async (fechaStr) => {
+  const calcularHorasDisponibles = async (fechaStr, nombreServicio) => {
     setCargandoHoras(true);
     const fecha = new Date(fechaStr + "T00:00:00");
     const diaSemana = fecha.getDay(); // 0=domingo
@@ -81,24 +88,39 @@ export default function ClienteApp() {
       return;
     }
 
-    // Generar slots de 1 hora entre hora_inicio y hora_fin
-    const slots = [];
-    let [hIni] = config.hora_inicio.split(":").map(Number);
-    let [hFin] = config.hora_fin.split(":").map(Number);
-    for (let h = hIni; h < hFin; h++) {
-      slots.push(`${String(h).padStart(2, "0")}:00`);
-    }
+    const servicioElegido = CATALOGO.find(s => s.nombre === nombreServicio);
+    const duracionNueva = servicioElegido ? servicioElegido.duracionBloque : 2; // horas, default de seguridad
 
-    // Consultar citas ya existentes para esa fecha (no canceladas)
+    const inicioMin = horaAMinutos(config.hora_inicio);
+    const finMin = horaAMinutos(config.hora_fin);
+
+    // Consultar citas ya existentes para esa fecha (no canceladas), con su servicio para saber cuánto ocupan
     const { data: citasExistentes } = await supabase
       .from("citas")
-      .select("hora, estado")
+      .select("hora, servicio, estado")
       .eq("fecha", fechaStr)
       .neq("estado", "cancelada");
 
-    const ocupadas = (citasExistentes || []).map(c => c.hora);
-    setHorasOcupadas(ocupadas);
-    setHorasDisponibles(slots.filter(s => !ocupadas.includes(s)));
+    // Convertir cada cita existente a un rango ocupado [inicio, fin) en minutos
+    const rangosOcupados = (citasExistentes || []).map(c => {
+      const s = CATALOGO.find(x => x.nombre === c.servicio);
+      const dur = s ? s.duracionBloque : 2;
+      const ini = horaAMinutos(c.hora);
+      return { ini, fin: ini + dur * 60 };
+    });
+
+    // Generar slots cada 30 min y verificar que el servicio completo (con su duración) entre sin chocar con otra cita
+    const slots = [];
+    for (let m = inicioMin; m + duracionNueva * 60 <= finMin; m += 30) {
+      const finNuevo = m + duracionNueva * 60;
+      const chocaConOtra = rangosOcupados.some(r => m < r.fin && finNuevo > r.ini);
+      if (!chocaConOtra) {
+        slots.push(minutosAHora(m));
+      }
+    }
+
+    setHorasOcupadas(rangosOcupados.map(r => minutosAHora(r.ini)));
+    setHorasDisponibles(slots);
     setCargandoHoras(false);
   };
 
@@ -117,18 +139,30 @@ export default function ClienteApp() {
     setAgendaError("");
     setEnviando(true);
 
-    // Verificación final: confirmar que la hora sigue libre (evita doble-booking si dos personas agendan a la vez)
-    const { data: choque } = await supabase
+    // Verificación final: confirmar que el rango de tiempo sigue libre (evita doble-booking si dos personas agendan a la vez)
+    const servicioElegido = CATALOGO.find(s => s.nombre === agenda.servicio);
+    const duracionNueva = servicioElegido ? servicioElegido.duracionBloque : 2;
+    const inicioNuevoMin = horaAMinutos(agenda.hora);
+    const finNuevoMin = inicioNuevoMin + duracionNueva * 60;
+
+    const { data: citasDelDia } = await supabase
       .from("citas")
-      .select("id")
+      .select("id, hora, servicio")
       .eq("fecha", agenda.fecha)
-      .eq("hora", agenda.hora)
       .neq("estado", "cancelada");
 
-    if (choque && choque.length > 0) {
+    const hayChoque = (citasDelDia || []).some(c => {
+      const s = CATALOGO.find(x => x.nombre === c.servicio);
+      const dur = s ? s.duracionBloque : 2;
+      const ini = horaAMinutos(c.hora);
+      const fin = ini + dur * 60;
+      return inicioNuevoMin < fin && finNuevoMin > ini;
+    });
+
+    if (hayChoque) {
       setAgendaError("Justo se ocupó ese horario. Por favor elige otra hora disponible.");
       setEnviando(false);
-      calcularHorasDisponibles(agenda.fecha);
+      calcularHorasDisponibles(agenda.fecha, agenda.servicio);
       return;
     }
 
@@ -327,9 +361,9 @@ export default function ClienteApp() {
 
                 <div style={{ marginBottom: 14 }}>
                   <label style={lbl}>Servicio que deseas *</label>
-                  <select value={agenda.servicio} onChange={e => setAgenda(a => ({ ...a, servicio: e.target.value }))} style={inp}>
+                  <select value={agenda.servicio} onChange={e => setAgenda(a => ({ ...a, servicio: e.target.value, hora: "" }))} style={inp}>
                     <option value="" style={{ background: "#0d1f3c" }}>Selecciona un servicio...</option>
-                    {CATALOGO.map(s => <option key={s.id} value={s.nombre} style={{ background: "#0d1f3c" }}>{s.icono} {s.nombre}</option>)}
+                    {CATALOGO.map(s => <option key={s.id} value={s.nombre} style={{ background: "#0d1f3c" }}>{s.icono} {s.nombre} ({s.duracion})</option>)}
                   </select>
                 </div>
 
@@ -342,17 +376,19 @@ export default function ClienteApp() {
 
                 <div style={{ marginBottom: 14 }}>
                   <label style={lbl}>Fecha *</label>
-                  <input type="date" value={agenda.fecha} min={new Date().toISOString().split("T")[0]} onChange={e => setAgenda(a => ({ ...a, fecha: e.target.value, hora: "" }))} style={inp} />
+                  <input type="date" value={agenda.fecha} min={new Date().toISOString().split("T")[0]} disabled={!agenda.servicio} onChange={e => setAgenda(a => ({ ...a, fecha: e.target.value, hora: "" }))} style={{ ...inp, opacity: agenda.servicio ? 1 : 0.4 }} />
+                  {!agenda.servicio && <div style={{ color: "rgba(255,255,255,0.35)", fontSize: 11, marginTop: 6 }}>Primero elige un servicio para ver fechas disponibles</div>}
                 </div>
 
-                {agenda.fecha && (
+                {agenda.fecha && agenda.servicio && (
                   <div style={{ marginBottom: 14 }}>
                     <label style={lbl}>Hora disponible *</label>
+                    <div style={{ color: "rgba(255,255,255,0.35)", fontSize: 11, marginBottom: 10 }}>Este servicio dura aprox. {CATALOGO.find(s => s.nombre === agenda.servicio)?.duracion} — el sistema ya considera tiempo de traslado entre citas</div>
                     {cargandoHoras ? (
                       <div style={{ color: "rgba(255,255,255,0.4)", fontSize: 13, padding: "10px 0" }}>Consultando disponibilidad...</div>
                     ) : horasDisponibles.length === 0 ? (
                       <div style={{ color: "#f59e0b", fontSize: 13, background: "rgba(245,158,11,0.1)", border: "1px solid rgba(245,158,11,0.3)", borderRadius: 10, padding: "12px 14px" }}>
-                        No hay horarios disponibles ese día. Intenta otra fecha o contáctanos por WhatsApp.
+                        No hay horarios disponibles ese día para este servicio. Intenta otra fecha o contáctanos por WhatsApp.
                       </div>
                     ) : (
                       <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
@@ -362,9 +398,6 @@ export default function ClienteApp() {
                           </button>
                         ))}
                       </div>
-                    )}
-                    {horasOcupadas.length > 0 && (
-                      <div style={{ color: "rgba(255,255,255,0.3)", fontSize: 11, marginTop: 8 }}>Horarios ya ocupados: {horasOcupadas.join(", ")}</div>
                     )}
                   </div>
                 )}
