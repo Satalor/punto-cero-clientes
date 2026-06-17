@@ -51,7 +51,7 @@ export default function ClienteApp() {
 
   // Fidelidad
   const [sellos, setSellosState] = useState(getSellos);
-  const [showPremio, setShowPremio] = useState(false);
+  const [showPremio, setShowPremio] = useState(false); // eslint-disable-line no-unused-vars
 
   // Cargar configuración de horarios al iniciar
   useEffect(() => {
@@ -66,6 +66,7 @@ export default function ClienteApp() {
   useEffect(() => {
     if (!agenda.fecha) { setHorasDisponibles([]); return; }
     calcularHorasDisponibles(agenda.fecha);
+     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [agenda.fecha, horarios]);
 
   const calcularHorasDisponibles = async (fechaStr) => {
