@@ -51,6 +51,14 @@ const CAT_STYLE = {
   especial: { color: T.teal, bg: T.tealSoft, label: "Especial" },
 };
 
+// Posts de Instagram destacados — para agregar uno nuevo: usuario, link al post, e imagen (opcional)
+// Video de la oferta — pon aquí el link (mp4) cuando lo tengas
+const PROMO_VIDEO_URL = "";
+
+const INSTA_POSTS = [
+  { usuario: "@puntocerodetallado", link: "https://www.instagram.com/puntocerodetallado/", imagen: null },
+];
+
 const FIDELIDAD_TOTAL = 8;
 const fmt = (n) => new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN", minimumFractionDigits: 0 }).format(n);
 
@@ -243,9 +251,11 @@ export default function ClienteApp() {
   const inp = { width: "100%", background: "transparent", border: "none", borderBottom: `1px solid ${T.line}`, borderRadius: 0, padding: "10px 2px", color: T.ink, fontSize: 15, fontFamily: "'Inter', sans-serif", boxSizing: "border-box", outline: "none" };
   const lbl = { ...mono, color: T.inkFaint, fontSize: 10.5, fontWeight: 500, textTransform: "uppercase", letterSpacing: 1.5, display: "block", marginBottom: 8 };
 
-  const btnPrimary = { background: T.marine, border: "none", color: T.paper, padding: "14px 26px", fontWeight: 500, cursor: "pointer", fontSize: 14, fontFamily: "'Inter', sans-serif", letterSpacing: 0.2 };
-  const btnGhost = { background: "transparent", border: `1px solid ${T.ink}`, color: T.ink, padding: "13px 26px", fontWeight: 500, cursor: "pointer", fontSize: 14, fontFamily: "'Inter', sans-serif", letterSpacing: 0.2 };
-  const btnWhats = { background: T.whats, border: "none", color: "#fff", padding: "13px 22px", fontWeight: 500, cursor: "pointer", fontSize: 13.5, fontFamily: "'Inter', sans-serif" };
+  const btnPrimary = { background: T.marine, border: "none", color: T.paper, padding: "14px 26px", fontWeight: 500, cursor: "pointer", fontSize: 14, fontFamily: "'Inter', sans-serif", letterSpacing: 0.2, transition: "opacity .15s ease, transform .15s ease" };
+  const btnGhost = { background: "transparent", border: `1px solid ${T.ink}`, color: T.ink, padding: "13px 26px", fontWeight: 500, cursor: "pointer", fontSize: 14, fontFamily: "'Inter', sans-serif", letterSpacing: 0.2, transition: "background .15s ease" };
+  const btnWhats = { background: T.whats, border: "none", color: "#fff", padding: "13px 22px", fontWeight: 500, cursor: "pointer", fontSize: 13.5, fontFamily: "'Inter', sans-serif", transition: "opacity .15s ease" };
+  const hoverIn = (e, bg) => { e.currentTarget.style.background = bg; };
+  const hoverOut = (e, bg) => { e.currentTarget.style.background = bg; };
 
   const TABS = [
     { id: "inicio", label: "Inicio" },
@@ -256,6 +266,18 @@ export default function ClienteApp() {
 
   return (
     <div style={{ fontFamily: "'Inter', sans-serif", minHeight: "100vh", background: T.paper, paddingBottom: 88, color: T.ink }}>
+      <style>{`
+        .pc-btn-primary:hover { opacity: .85; }
+        .pc-btn-ghost:hover { background: ${T.ink}; color: ${T.paper} !important; }
+        .pc-btn-whats:hover { opacity: .88; }
+        .pc-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.06); transform: translateY(-1px); }
+        .pc-card { transition: box-shadow .18s ease, transform .18s ease; }
+        .pc-input:focus { border-bottom-color: ${T.marine} !important; }
+        .pc-tab-content { animation: pc-fade .25s ease; }
+        @keyframes pc-fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+        select.pc-input { cursor: pointer; }
+        ::selection { background: ${T.brassSoft}; }
+      `}</style>
 
       {/* HEADER */}
       <div style={{ background: T.paper, padding: "22px 20px 16px", borderBottom: `1px solid ${T.line}` }}>
@@ -290,13 +312,29 @@ export default function ClienteApp() {
               </div>
             </div>
 
+            <div style={{ display: "flex", gap: 0, marginBottom: 44, border: `1px solid ${T.line}`, overflow: "hidden", flexWrap: "wrap" }}>
+              <div style={{ flex: "1 1 200px", background: T.paperAlt, minHeight: 180, display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
+                {PROMO_VIDEO_URL ? (
+                  <video src={PROMO_VIDEO_URL} autoPlay muted loop playsInline style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                ) : (
+                  <span style={{ ...mono, fontSize: 10, color: T.inkFaint, letterSpacing: 1, textTransform: "uppercase" }}>Video del servicio</span>
+                )}
+              </div>
+              <div style={{ flex: "1.4 1 260px", background: T.marine, color: T.paper, padding: "26px 24px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+                <span style={{ ...mono, fontSize: 10, letterSpacing: 2, textTransform: "uppercase", color: T.brass, marginBottom: 10 }}>Oferta de lanzamiento</span>
+                <div style={{ ...serif, fontWeight: 600, fontSize: 32, lineHeight: 1, marginBottom: 10 }}>20% OFF</div>
+                <div style={{ fontSize: 13.5, lineHeight: 1.6, opacity: 0.85, marginBottom: 18 }}>En tu primer servicio. Válido para los primeros 20 clientes de Punto Cero Detallado.</div>
+                <button onClick={() => setTab("agendar")} style={{ ...mono, alignSelf: "flex-start", background: T.paper, border: "none", color: T.marine, padding: "11px 22px", fontWeight: 600, cursor: "pointer", fontSize: 12.5, letterSpacing: 0.5 }}>Agendar ahora</button>
+              </div>
+            </div>
+
             <div style={{ height: 1, background: T.line, marginBottom: 36 }} />
 
-            <span style={eyebrow}>Por qué elegirnos</span>
+            <span style={eyebrow}>¿Por qué elegirnos?</span>
             <div style={{ marginBottom: 44 }}>
               {[
                 { title: "A domicilio", desc: "Llegamos a tu casa, trabajo o donde nos necesites." },
-                { title: "Alta calidad", desc: "Productos profesionales y atención al detalle." },
+                { title: "Alta calidad", desc: "Productos profesionales, atención al detalle y técnicas especializadas para el cuidado de tu auto." },
                 { title: "Puntualidad", desc: "Respetamos tu tiempo y el horario acordado." },
                 { title: "Precio justo", desc: "Servicio premium a precios accesibles." },
               ].map((c, i) => (
@@ -320,6 +358,80 @@ export default function ClienteApp() {
                 <span style={{ color: T.inkFaint, fontSize: 18 }}>→</span>
               </div>
             ))}
+
+            <div style={{ height: 1, background: T.line, margin: "36px 0" }} />
+
+            <span style={eyebrow}>Conoce nuestras marcas</span>
+            <div style={{ display: "flex", gap: 12, overflowX: "auto", paddingBottom: 8, marginLeft: -20, marginRight: -20, paddingLeft: 20, paddingRight: 20, scrollbarWidth: "none" }}>
+              {[
+                { nombre: "Black+Decker", desc: "Hidrolavadora", color: T.marine, logo: "" },
+                { nombre: "Karcher", desc: "Lava-aspiradora", color: T.brass, logo: "" },
+                { nombre: "Koblenz", desc: "Aspiradora", color: T.teal, logo: "" },
+              ].map(m => (
+                <div key={m.nombre} style={{ flex: "0 0 auto", width: 150, background: T.surface, border: `1px solid ${T.line}`, borderTop: `3px solid ${m.color}`, padding: "20px 16px" }}>
+                  <div style={{ height: 32, marginBottom: 12, display: "flex", alignItems: "center" }}>
+                    {m.logo ? <img src={m.logo} alt={m.nombre} style={{ maxHeight: 32, maxWidth: "100%", objectFit: "contain" }} /> : <span style={{ ...mono, fontSize: 9, color: T.inkFaint }}>Logo</span>}
+                  </div>
+                  <div style={{ ...serif, fontWeight: 600, fontSize: 15, marginBottom: 4 }}>{m.nombre}</div>
+                  <div style={{ ...mono, color: T.inkFaint, fontSize: 10.5, textTransform: "uppercase", letterSpacing: 1 }}>{m.desc}</div>
+                </div>
+              ))}
+            </div>
+
+            <div style={{ height: 1, background: T.line, margin: "36px 0" }} />
+
+            <span style={eyebrow}>Quiénes somos</span>
+            <div style={{ marginBottom: 44 }}>
+              <div style={{ ...serif, fontWeight: 600, fontSize: 22, lineHeight: 1.3, marginBottom: 12, maxWidth: 460 }}>
+                Dos socios, una obsesión por dejar cada auto impecable.
+              </div>
+              <div style={{ color: T.inkSoft, fontSize: 14, lineHeight: 1.7, maxWidth: 460 }}>
+                Punto Cero Detallado nació en CDMX y Puebla con una idea simple: llevar un detallado de nivel profesional hasta la puerta de tu casa u oficina, con el mismo cuidado que le daríamos a nuestro propio auto.
+              </div>
+            </div>
+
+            <span style={eyebrow}>Antes / después</span>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8, marginBottom: 44 }}>
+              {[1, 2, 3].map(i => (
+                <div key={i} style={{ aspectRatio: "1", background: T.paperAlt, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <span style={{ ...mono, fontSize: 9, color: T.inkFaint, letterSpacing: 0.5 }}>Foto {i}</span>
+                </div>
+              ))}
+            </div>
+
+            <span style={eyebrow}>Lo que dicen nuestros clientes</span>
+            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 18 }}>
+              <span style={{ ...mono, fontSize: 13, color: T.ink, fontWeight: 600 }}>Google</span>
+              <span style={{ color: T.brass, fontSize: 13, letterSpacing: 1 }}>★★★★★</span>
+              <span style={{ ...mono, fontSize: 11, color: T.inkFaint }}>Reseñas verificadas</span>
+            </div>
+            <div style={{ marginBottom: 8 }}>
+              {[
+                { texto: "Llegaron puntuales y el auto quedó como nuevo. El servicio a domicilio es lo mejor.", autor: "Cliente en CDMX" },
+                { texto: "Muy profesionales, cuidaron cada detalle del interior. Ya lo agendé mensual.", autor: "Cliente en Puebla" },
+              ].map((r, i) => (
+                <div key={i} style={{ padding: "18px 0", borderTop: i === 0 ? `1px solid ${T.line}` : "none", borderBottom: `1px solid ${T.line}` }}>
+                  <div style={{ color: T.brass, fontSize: 12, letterSpacing: 1, marginBottom: 6 }}>★★★★★</div>
+                  <div style={{ ...serif, fontStyle: "italic", fontSize: 15, lineHeight: 1.6, marginBottom: 8 }}>&ldquo;{r.texto}&rdquo;</div>
+                  <div style={{ ...mono, fontSize: 10.5, color: T.inkFaint, textTransform: "uppercase", letterSpacing: 1 }}>{r.autor}</div>
+                </div>
+              ))}
+            </div>
+
+            <div style={{ height: 1, background: T.line, margin: "36px 0" }} />
+
+            <span style={eyebrow}>Síguenos en Instagram</span>
+            <div style={{ ...serif, fontWeight: 600, fontSize: 18, marginBottom: 16, maxWidth: 420 }}>Etiquétanos y aparece aquí</div>
+            <div style={{ display: "flex", gap: 12, overflowX: "auto", paddingBottom: 8, marginLeft: -20, marginRight: -20, paddingLeft: 20, paddingRight: 20, scrollbarWidth: "none" }}>
+              {INSTA_POSTS.map((p, i) => (
+                <a key={i} href={p.link} target="_blank" rel="noreferrer" style={{ flex: "0 0 auto", width: 130, textDecoration: "none" }}>
+                  <div style={{ width: 130, height: 130, background: p.imagen ? `url(${p.imagen}) center/cover` : T.paperAlt, border: `1px solid ${T.line}`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    {!p.imagen && <span style={{ ...mono, fontSize: 9, color: T.inkFaint }}>Foto</span>}
+                  </div>
+                  <div style={{ ...mono, fontSize: 10.5, color: T.inkSoft, marginTop: 6 }}>{p.usuario}</div>
+                </a>
+              ))}
+            </div>
           </div>
         )}
 
