@@ -63,7 +63,7 @@ const MARCAS = [
 ];
 
 // Video de la oferta — pon aquí el link (mp4) cuando lo tengas
-const PROMO_VIDEO_URL = "";
+const PROMO_VIDEO_URL = "/promo.mp4";
 
 const INSTA_POSTS = [
   { usuario: "@puntocerodetallado", link: "https://www.instagram.com/puntocerodetallado/", imagen: null },
