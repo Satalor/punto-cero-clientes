@@ -324,7 +324,6 @@ export default function ClienteApp() {
         .pc-input:focus { border-bottom-color: ${T.marine} !important; }
         .pc-tab-content { animation: pc-fade .25s ease; }
         .pc-marquee { animation: pc-scroll 18s linear infinite; }
-        .pc-marquee:hover { animation-play-state: paused; }
         @keyframes pc-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
         @keyframes pc-fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
         select.pc-input { cursor: pointer; }
