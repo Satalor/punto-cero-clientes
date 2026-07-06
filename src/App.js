@@ -3,29 +3,52 @@ import { supabase } from "./supabaseClient";
 
 // ── DATOS ────────────────────────────────────────────────────────────────────
 const WHATSAPP = "5578944681";
-const VEHICULOS = ["🚗 Compacto / Sedán", "🚙 Camioneta / SUV", "🚐 Van / Pickup"];
+const VEHICULOS = ["Compacto / Sedán", "Camioneta / SUV", "Van / Pickup"];
 
 // duracionBloque = horas que el servicio bloquea en la agenda (servicio + traslado incluido)
 const CATALOGO = [
-  { id: 1, nombre: "Lavado Exterior", desc: "Carrocería, llantas y vidrios exteriores con hidrolavadora.", duracion: "45 min", duracionBloque: 1.5, icono: "💧", cat: "basico", precios: [299, 349, 399], incluye: ["Lavado con hidrolavadora", "Secado completo", "Limpieza de llantas", "Vidrios exteriores"] },
-  { id: 2, nombre: "Lavado Interior", desc: "Aspirado, tablero, puertas y vidrios interiores.", duracion: "45 min", duracionBloque: 1.5, icono: "🧹", cat: "basico", precios: [299, 349, 399], incluye: ["Aspirado de tapetes y asientos", "Limpieza de tablero", "Limpieza de puertas", "Vidrios interiores"] },
-  { id: 3, nombre: "Detallado Completo", desc: "Interior + exterior. Nuestro servicio más solicitado.", duracion: "2 hrs", duracionBloque: 2.5, icono: "✨", cat: "popular", precios: [549, 649, 749], incluye: ["Todo del lavado exterior", "Todo del lavado interior", "Brillado de llantas", "Ambientador incluido"] },
-  { id: 4, nombre: "Pulido de Pintura", desc: "Elimina rayones superficiales y restaura el brillo original.", duracion: "3-4 hrs", duracionBloque: 4.5, icono: "🔆", cat: "premium", precios: [899, 1099, 1299], incluye: ["Lavado previo", "Pulido con máquina orbital", "Corrección de rayones leves", "Brillo profundo"] },
-  { id: 5, nombre: "Encerado y Protección", desc: "Cera protectora que cuida tu pintura hasta 3 meses.", duracion: "2-3 hrs", duracionBloque: 3.5, icono: "🛡️", cat: "premium", precios: [699, 849, 999], incluye: ["Lavado previo", "Descontaminación de pintura", "Cera carnauba", "Protección 3 meses"] },
-  { id: 6, nombre: "Descontaminación", desc: "Savia, manchas de agua, excremento de aves y más.", duracion: "1.5 hrs", duracionBloque: 2.5, icono: "🧪", cat: "especial", precios: [499, 599, 699], incluye: ["Lavado previo", "Descontaminante químico", "Clay bar", "Enjuague y secado"] },
-  { id: 7, nombre: "Detallado Premium", desc: "Lo mejor de todo. Pulido + encerado + interior y exterior.", duracion: "5-6 hrs", duracionBloque: 6.5, icono: "👑", cat: "premium", precios: [1499, 1799, 2099], incluye: ["Detallado completo", "Pulido de pintura", "Encerado y protección", "Limpieza profunda de tapicería", "Restauración de plásticos", "Ambientador premium"] },
-  { id: 8, nombre: "Limpieza de Tapicería", desc: "Lavado profundo de asientos, tapetes y techo interior.", duracion: "2-3 hrs", duracionBloque: 3.5, icono: "🧽", cat: "especial", precios: [599, 749, 899], incluye: ["Aspirado profundo", "Extracción de manchas", "Limpieza con espuma", "Secado y acondicionado"] },
+  { id: 1, nombre: "Lavado Exterior", desc: "Carrocería, llantas y vidrios exteriores con hidrolavadora.", duracion: "45 min", duracionBloque: 1.5, cat: "basico", precios: [299, 349, 399], incluye: ["Lavado con hidrolavadora", "Secado completo", "Limpieza de llantas", "Vidrios exteriores"] },
+  { id: 2, nombre: "Lavado Interior", desc: "Aspirado, tablero, puertas y vidrios interiores.", duracion: "45 min", duracionBloque: 1.5, cat: "basico", precios: [299, 349, 399], incluye: ["Aspirado de tapetes y asientos", "Limpieza de tablero", "Limpieza de puertas", "Vidrios interiores"] },
+  { id: 3, nombre: "Detallado Completo", desc: "Interior + exterior. Nuestro servicio más solicitado.", duracion: "2 hrs", duracionBloque: 2.5, cat: "popular", precios: [549, 649, 749], incluye: ["Todo del lavado exterior", "Todo del lavado interior", "Brillado de llantas", "Ambientador incluido"] },
+  { id: 4, nombre: "Pulido de Pintura", desc: "Elimina rayones superficiales y restaura el brillo original.", duracion: "3-4 hrs", duracionBloque: 4.5, cat: "premium", precios: [899, 1099, 1299], incluye: ["Lavado previo", "Pulido con máquina orbital", "Corrección de rayones leves", "Brillo profundo"] },
+  { id: 5, nombre: "Encerado y Protección", desc: "Cera protectora que cuida tu pintura hasta 3 meses.", duracion: "2-3 hrs", duracionBloque: 3.5, cat: "premium", precios: [699, 849, 999], incluye: ["Lavado previo", "Descontaminación de pintura", "Cera carnauba", "Protección 3 meses"] },
+  { id: 6, nombre: "Descontaminación", desc: "Savia, manchas de agua, excremento de aves y más.", duracion: "1.5 hrs", duracionBloque: 2.5, cat: "especial", precios: [499, 599, 699], incluye: ["Lavado previo", "Descontaminante químico", "Clay bar", "Enjuague y secado"] },
+  { id: 7, nombre: "Detallado Premium", desc: "Lo mejor de todo. Pulido + encerado + interior y exterior.", duracion: "5-6 hrs", duracionBloque: 6.5, cat: "premium", precios: [1499, 1799, 2099], incluye: ["Detallado completo", "Pulido de pintura", "Encerado y protección", "Limpieza profunda de tapicería", "Restauración de plásticos", "Ambientador premium"] },
+  { id: 8, nombre: "Limpieza de Tapicería", desc: "Lavado profundo de asientos, tapetes y techo interior.", duracion: "2-3 hrs", duracionBloque: 3.5, cat: "especial", precios: [599, 749, 899], incluye: ["Aspirado profundo", "Extracción de manchas", "Limpieza con espuma", "Secado y acondicionado"] },
 ];
 
 // Helpers de tiempo: convierten "09:00" <-> minutos desde medianoche, y suman duraciones en horas
 const horaAMinutos = (hhmm) => { const [h, m] = hhmm.split(":").map(Number); return h * 60 + (m || 0); };
 const minutosAHora = (min) => `${String(Math.floor(min / 60)).padStart(2, "0")}:${String(min % 60).padStart(2, "0")}`;
 
+// ── TOKENS DE DISEÑO ──────────────────────────────────────────────────────────
+// Inspirado en editoriales de moda/joyería (Ginebra, Once, Fate): papel neutro,
+// serif con carácter, mono para datos, y un acabado "ticket de taller" como firma.
+const T = {
+  paper: "#F3F1EA",
+  paperAlt: "#EBE8DF",
+  surface: "#FFFFFF",
+  ink: "#16181C",
+  inkSoft: "#6B6E74",
+  inkFaint: "#A8A9A2",
+  line: "#DBD7CB",
+  marine: "#1C3A56",
+  marineSoft: "#1C3A5612",
+  brass: "#9C7A3C",
+  brassSoft: "#9C7A3C15",
+  teal: "#3F6357",
+  tealSoft: "#3F635715",
+  whats: "#3F7D58",
+  whatsSoft: "#3F7D5815",
+  error: "#A23B2E",
+  errorSoft: "#A23B2E12",
+};
+
 const CAT_STYLE = {
-  basico:  { color: "#3b82f6", label: "Básico" },
-  popular: { color: "#22c55e", label: "⭐ Popular" },
-  premium: { color: "#f59e0b", label: "Premium" },
-  especial:{ color: "#a855f7", label: "Especial" },
+  basico: { color: T.inkSoft, bg: "#6B6E7412", label: "Básico" },
+  popular: { color: T.brass, bg: T.brassSoft, label: "Popular" },
+  premium: { color: T.marine, bg: T.marineSoft, label: "Premium" },
+  especial: { color: T.teal, bg: T.tealSoft, label: "Especial" },
 };
 
 const FIDELIDAD_TOTAL = 8;
@@ -35,8 +58,21 @@ const fmt = (n) => new Intl.NumberFormat("es-MX", { style: "currency", currency:
 const getSellos = () => { try { return parseInt(localStorage.getItem("pc_sellos") || "0"); } catch { return 0; } };
 const setSellos = (n) => { try { localStorage.setItem("pc_sellos", String(n)); } catch {} };
 
+// ── FUENTES (inyectadas una vez) ──────────────────────────────────────────────
+function useFonts() {
+  useEffect(() => {
+    if (document.getElementById("pc-fonts")) return;
+    const link = document.createElement("link");
+    link.id = "pc-fonts";
+    link.rel = "stylesheet";
+    link.href = "https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap";
+    document.head.appendChild(link);
+  }, []);
+}
+
 // ── COMPONENTE PRINCIPAL ──────────────────────────────────────────────────────
 export default function ClienteApp() {
+  useFonts();
   const [tab, setTab] = useState("inicio");
   const [vehiculo, setVehiculo] = useState(0);
   const [expandido, setExpandido] = useState(null);
@@ -127,7 +163,7 @@ export default function ClienteApp() {
   const abrirWhatsApp = (msg) => window.open(`https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msg)}`, "_blank");
 
   const cotizarWhatsApp = (s) => {
-    const msg = `Hola! Me interesa el servicio de *${s.nombre}* para mi ${VEHICULOS[vehiculo].replace(/^.{2}/, "").trim()}.\nPrecio: ${fmt(s.precios[vehiculo])}\n¿Tienen disponibilidad?`;
+    const msg = `Hola! Me interesa el servicio de *${s.nombre}* para mi ${VEHICULOS[vehiculo]}.\nPrecio: ${fmt(s.precios[vehiculo])}\n¿Tienen disponibilidad?`;
     abrirWhatsApp(msg);
   };
 
@@ -199,72 +235,89 @@ export default function ClienteApp() {
 
   const resetFidelidad = () => { setSellosState(0); setSellos(0); setShowPremio(false); };
 
-  const inp = { width: "100%", background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 10, padding: "11px 14px", color: "white", fontSize: 14, boxSizing: "border-box", outline: "none" };
-  const lbl = { color: "rgba(255,255,255,0.5)", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: 0.5, display: "block", marginBottom: 6 };
+  // ── ESTILOS COMPARTIDOS ─────────────────────────────────────────────────────
+  const serif = { fontFamily: "'Fraunces', serif" };
+  const mono = { fontFamily: "'IBM Plex Mono', monospace" };
+
+  const eyebrow = { ...mono, fontSize: 11, fontWeight: 500, textTransform: "uppercase", letterSpacing: 2, color: T.inkFaint, marginBottom: 14, display: "block" };
+  const inp = { width: "100%", background: "transparent", border: "none", borderBottom: `1px solid ${T.line}`, borderRadius: 0, padding: "10px 2px", color: T.ink, fontSize: 15, fontFamily: "'Inter', sans-serif", boxSizing: "border-box", outline: "none" };
+  const lbl = { ...mono, color: T.inkFaint, fontSize: 10.5, fontWeight: 500, textTransform: "uppercase", letterSpacing: 1.5, display: "block", marginBottom: 8 };
+
+  const btnPrimary = { background: T.marine, border: "none", color: T.paper, padding: "14px 26px", fontWeight: 500, cursor: "pointer", fontSize: 14, fontFamily: "'Inter', sans-serif", letterSpacing: 0.2 };
+  const btnGhost = { background: "transparent", border: `1px solid ${T.ink}`, color: T.ink, padding: "13px 26px", fontWeight: 500, cursor: "pointer", fontSize: 14, fontFamily: "'Inter', sans-serif", letterSpacing: 0.2 };
+  const btnWhats = { background: T.whats, border: "none", color: "#fff", padding: "13px 22px", fontWeight: 500, cursor: "pointer", fontSize: 13.5, fontFamily: "'Inter', sans-serif" };
 
   const TABS = [
-    { id: "inicio", icon: "🏠", label: "Inicio" },
-    { id: "servicios", icon: "✨", label: "Servicios" },
-    { id: "agendar", icon: "📅", label: "Agendar" },
-    { id: "fidelidad", icon: "🎁", label: "Mi Tarjeta" },
+    { id: "inicio", label: "Inicio" },
+    { id: "servicios", label: "Servicios" },
+    { id: "agendar", label: "Agendar" },
+    { id: "fidelidad", label: "Fidelidad" },
   ];
 
   return (
-    <div style={{ fontFamily: "'Inter', sans-serif", minHeight: "100vh", background: "#0a1628", paddingBottom: 80 }}>
+    <div style={{ fontFamily: "'Inter', sans-serif", minHeight: "100vh", background: T.paper, paddingBottom: 88, color: T.ink }}>
 
       {/* HEADER */}
-      <div style={{ background: "linear-gradient(135deg, #0d2347, #1a3a6b)", padding: "22px 20px 18px", textAlign: "center", borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
-        <div style={{ width: 56, height: 56, borderRadius: "50%", background: "linear-gradient(135deg, #00b4ff, #0066cc)", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, color: "white", fontSize: 24, margin: "0 auto 10px" }}>P</div>
-        <div style={{ color: "white", fontWeight: 900, fontSize: 20, letterSpacing: -0.5 }}>Punto Cero Detallado</div>
-        <div style={{ color: "rgba(255,255,255,0.45)", fontSize: 12, marginTop: 3 }}>Tu auto de vuelta a Punto Cero · CDMX & Puebla</div>
-        <button onClick={() => abrirWhatsApp("Hola! Me gustaría más información sobre sus servicios.")} style={{ marginTop: 14, background: "#25d366", border: "none", color: "white", padding: "10px 22px", borderRadius: 24, fontWeight: 700, cursor: "pointer", fontSize: 13, display: "inline-flex", alignItems: "center", gap: 8 }}>
-          <span>📱</span> WhatsApp · 55 7894 4681
-        </button>
+      <div style={{ background: T.paper, padding: "22px 20px 16px", borderBottom: `1px solid ${T.line}` }}>
+        <div style={{ maxWidth: 600, margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
+          <div>
+            <div style={{ ...serif, fontWeight: 600, fontSize: 21, letterSpacing: 0.2, lineHeight: 1 }}>Punto Cero</div>
+            <div style={{ ...mono, fontSize: 10, color: T.inkFaint, letterSpacing: 2, marginTop: 5, textTransform: "uppercase" }}>Detallado · CDMX &amp; Puebla</div>
+          </div>
+          <button onClick={() => abrirWhatsApp("Hola! Me gustaría más información sobre sus servicios.")} style={{ background: "none", border: "none", borderBottom: `1px solid ${T.ink}`, color: T.ink, padding: "0 0 2px", fontWeight: 500, cursor: "pointer", fontSize: 13, fontFamily: "'Inter', sans-serif" }}>
+            WhatsApp ↗
+          </button>
+        </div>
       </div>
 
       {/* CONTENIDO */}
-      <div style={{ maxWidth: 600, margin: "0 auto", padding: "20px 16px" }}>
+      <div style={{ maxWidth: 600, margin: "0 auto", padding: "36px 20px" }}>
 
         {/* ── INICIO ── */}
         {tab === "inicio" && (
           <div>
-            <div style={{ background: "linear-gradient(135deg, rgba(0,180,255,0.15), rgba(0,102,204,0.1))", border: "1px solid rgba(0,180,255,0.25)", borderRadius: 20, padding: "28px 24px", marginBottom: 20, textAlign: "center" }}>
-              <div style={{ fontSize: 40, marginBottom: 12 }}>🚗💨</div>
-              <div style={{ color: "white", fontWeight: 800, fontSize: 22, marginBottom: 8 }}>Detallado automotriz a domicilio</div>
-              <div style={{ color: "rgba(255,255,255,0.6)", fontSize: 14, lineHeight: 1.6, marginBottom: 20 }}>Llevamos el servicio a donde estés. Sin que muevas tu auto — nosotros llegamos a ti.</div>
-              <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap" }}>
-                <button onClick={() => setTab("servicios")} style={{ background: "linear-gradient(135deg, #00b4ff, #0066cc)", border: "none", color: "white", padding: "12px 24px", borderRadius: 14, fontWeight: 700, cursor: "pointer", fontSize: 14 }}>Ver servicios</button>
-                <button onClick={() => setTab("agendar")} style={{ background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", color: "white", padding: "12px 24px", borderRadius: 14, fontWeight: 700, cursor: "pointer", fontSize: 14 }}>Agendar cita</button>
+            <div style={{ marginBottom: 44 }}>
+              <span style={eyebrow}>A domicilio · CDMX &amp; Puebla</span>
+              <div style={{ ...serif, fontWeight: 600, fontSize: 40, lineHeight: 1.08, letterSpacing: -0.5, marginBottom: 18 }}>
+                Tu auto,<br />de vuelta a punto cero<span style={{ color: T.brass }}>.</span>
+              </div>
+              <div style={{ color: T.inkSoft, fontSize: 15, lineHeight: 1.7, marginBottom: 28, maxWidth: 440 }}>
+                Detallado automotriz donde tú estés. Sin mover tu auto, sin filas — nosotros llegamos con el equipo completo.
+              </div>
+              <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
+                <button onClick={() => setTab("servicios")} style={btnPrimary}>Ver servicios</button>
+                <button onClick={() => setTab("agendar")} style={btnGhost}>Agendar cita</button>
               </div>
             </div>
 
-            <div style={{ color: "rgba(255,255,255,0.5)", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1, marginBottom: 12 }}>¿Por qué elegirnos?</div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 20 }}>
+            <div style={{ height: 1, background: T.line, marginBottom: 36 }} />
+
+            <span style={eyebrow}>Por qué elegirnos</span>
+            <div style={{ marginBottom: 44 }}>
               {[
-                { icon: "🏠", title: "A domicilio", desc: "Llegamos a tu casa, trabajo o donde nos necesites" },
-                { icon: "⭐", title: "Alta calidad", desc: "Productos profesionales y atención al detalle" },
-                { icon: "⏱", title: "Puntualidad", desc: "Respetamos tu tiempo y horario acordado" },
-                { icon: "💰", title: "Precio justo", desc: "Servicio premium a precios accesibles" },
-              ].map((c) => (
-                <div key={c.title} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 14, padding: "16px 14px" }}>
-                  <div style={{ fontSize: 22, marginBottom: 8 }}>{c.icon}</div>
-                  <div style={{ color: "white", fontWeight: 700, fontSize: 13, marginBottom: 4 }}>{c.title}</div>
-                  <div style={{ color: "rgba(255,255,255,0.45)", fontSize: 12, lineHeight: 1.5 }}>{c.desc}</div>
+                { title: "A domicilio", desc: "Llegamos a tu casa, trabajo o donde nos necesites." },
+                { title: "Alta calidad", desc: "Productos profesionales y atención al detalle." },
+                { title: "Puntualidad", desc: "Respetamos tu tiempo y el horario acordado." },
+                { title: "Precio justo", desc: "Servicio premium a precios accesibles." },
+              ].map((c, i) => (
+                <div key={c.title} style={{ display: "flex", gap: 18, padding: "18px 0", borderTop: i === 0 ? `1px solid ${T.line}` : "none", borderBottom: `1px solid ${T.line}` }}>
+                  <div style={{ ...mono, fontSize: 12, color: T.brass, paddingTop: 2, flexShrink: 0, width: 20 }}>{String(i + 1).padStart(2, "0")}</div>
+                  <div>
+                    <div style={{ fontWeight: 600, fontSize: 15, marginBottom: 3 }}>{c.title}</div>
+                    <div style={{ color: T.inkSoft, fontSize: 13.5, lineHeight: 1.5 }}>{c.desc}</div>
+                  </div>
                 </div>
               ))}
             </div>
 
-            <div style={{ color: "rgba(255,255,255,0.5)", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1, marginBottom: 12 }}>Más solicitados</div>
+            <span style={eyebrow}>Más solicitados</span>
             {CATALOGO.filter(s => s.cat === "popular" || s.id === 1).map(s => (
-              <div key={s.id} onClick={() => { setTab("servicios"); setExpandido(s.id); }} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 14, padding: "14px 18px", marginBottom: 10, cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                  <span style={{ fontSize: 24 }}>{s.icono}</span>
-                  <div>
-                    <div style={{ color: "white", fontWeight: 700, fontSize: 14 }}>{s.nombre}</div>
-                    <div style={{ color: "rgba(255,255,255,0.4)", fontSize: 12 }}>Desde {fmt(s.precios[0])}</div>
-                  </div>
+              <div key={s.id} onClick={() => { setTab("servicios"); setExpandido(s.id); }} style={{ background: T.surface, border: `1px solid ${T.line}`, padding: "18px 20px", marginBottom: 10, cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div>
+                  <div style={{ fontWeight: 600, fontSize: 15 }}>{s.nombre}</div>
+                  <div style={{ ...mono, color: T.inkFaint, fontSize: 12, marginTop: 3 }}>Desde {fmt(s.precios[0])}</div>
                 </div>
-                <span style={{ color: "rgba(255,255,255,0.3)", fontSize: 18 }}>›</span>
+                <span style={{ color: T.inkFaint, fontSize: 18 }}>→</span>
               </div>
             ))}
           </div>
@@ -273,18 +326,18 @@ export default function ClienteApp() {
         {/* ── SERVICIOS ── */}
         {tab === "servicios" && (
           <div>
-            <div style={{ marginBottom: 20 }}>
-              <div style={{ color: "rgba(255,255,255,0.5)", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1, marginBottom: 10 }}>¿Qué tipo de vehículo tienes?</div>
-              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+            <div style={{ marginBottom: 28 }}>
+              <span style={eyebrow}>Tipo de vehículo</span>
+              <div style={{ display: "flex", gap: 22, borderBottom: `1px solid ${T.line}` }}>
                 {VEHICULOS.map((v, i) => (
-                  <button key={v} onClick={() => setVehiculo(i)} style={{ padding: "10px 16px", borderRadius: 12, border: vehiculo === i ? "2px solid #00b4ff" : "2px solid rgba(255,255,255,0.1)", background: vehiculo === i ? "rgba(0,180,255,0.15)" : "rgba(255,255,255,0.04)", color: vehiculo === i ? "#00b4ff" : "rgba(255,255,255,0.5)", fontWeight: vehiculo === i ? 700 : 500, cursor: "pointer", fontSize: 13 }}>{v}</button>
+                  <button key={v} onClick={() => setVehiculo(i)} style={{ background: "none", border: "none", padding: "0 0 12px", cursor: "pointer", fontSize: 13.5, fontFamily: "'Inter', sans-serif", color: vehiculo === i ? T.ink : T.inkFaint, fontWeight: vehiculo === i ? 600 : 400, borderBottom: vehiculo === i ? `2px solid ${T.brass}` : "2px solid transparent", marginBottom: -1 }}>{v}</button>
                 ))}
               </div>
             </div>
 
-            <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 18 }}>
-              {[["todos", "Todos"], ["basico", "Básicos"], ["popular", "Populares"], ["premium", "Premium"], ["especial", "Especiales"]].map(([k, l]) => (
-                <button key={k} onClick={() => setFiltro(k)} style={{ padding: "6px 14px", borderRadius: 20, border: `1px solid ${filtro === k ? "#00b4ff" : "rgba(255,255,255,0.1)"}`, background: filtro === k ? "rgba(0,180,255,0.15)" : "transparent", color: filtro === k ? "#00b4ff" : "rgba(255,255,255,0.4)", fontWeight: filtro === k ? 700 : 500, cursor: "pointer", fontSize: 12 }}>{l}</button>
+            <div style={{ display: "flex", gap: 18, flexWrap: "wrap", marginBottom: 30, fontSize: 13 }}>
+              {[["todos", "Todos"], ["basico", "Básicos"], ["popular", "Populares"], ["premium", "Premium"], ["especial", "Especiales"]].map(([k, l], i) => (
+                <button key={k} onClick={() => setFiltro(k)} style={{ background: "none", border: "none", padding: 0, cursor: "pointer", fontFamily: "'Inter', sans-serif", color: filtro === k ? T.ink : T.inkFaint, fontWeight: filtro === k ? 600 : 400, textDecoration: filtro === k ? "underline" : "none", textUnderlineOffset: 4 }}>{l}</button>
               ))}
             </div>
 
@@ -292,39 +345,29 @@ export default function ClienteApp() {
               const cs = CAT_STYLE[s.cat];
               const open = expandido === s.id;
               return (
-                <div key={s.id} style={{ background: `${cs.color}18`, border: `1px solid ${cs.color}55`, borderRadius: 18, marginBottom: 12, overflow: "hidden" }}>
-                  <div onClick={() => setExpandido(open ? null : s.id)} style={{ padding: "18px 20px", cursor: "pointer" }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                        <span style={{ fontSize: 26 }}>{s.icono}</span>
-                        <div>
-                          <div style={{ color: "white", fontWeight: 700, fontSize: 15 }}>{s.nombre}</div>
-                          <div style={{ display: "flex", gap: 8, alignItems: "center", marginTop: 3 }}>
-                            <span style={{ background: cs.color, color: "white", fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 20 }}>{cs.label}</span>
-                            <span style={{ color: "rgba(255,255,255,0.4)", fontSize: 11 }}>⏱ {s.duracion}</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div style={{ textAlign: "right" }}>
-                        <div style={{ color: "#00b4ff", fontWeight: 900, fontSize: 20 }}>{fmt(s.precios[vehiculo])}</div>
-                        <div style={{ color: "rgba(255,255,255,0.3)", fontSize: 10 }}>{VEHICULOS[vehiculo].replace(/^.{2}/, "")}</div>
-                      </div>
+                <div key={s.id} style={{ background: T.surface, border: `1px solid ${T.line}`, marginBottom: 12 }}>
+                  <div onClick={() => setExpandido(open ? null : s.id)} style={{ padding: "20px 20px", cursor: "pointer", display: "flex", justifyContent: "space-between", gap: 16 }}>
+                    <div style={{ flex: 1 }}>
+                      <span style={{ ...mono, fontSize: 10, fontWeight: 500, letterSpacing: 1, textTransform: "uppercase", color: cs.color }}>{cs.label} · {s.duracion}</span>
+                      <div style={{ ...serif, fontWeight: 600, fontSize: 18, marginTop: 6, marginBottom: 6 }}>{s.nombre}</div>
+                      <div style={{ color: T.inkSoft, fontSize: 13.5, lineHeight: 1.5 }}>{s.desc}</div>
+                      <div style={{ color: T.inkFaint, fontSize: 11, marginTop: 10, ...mono }}>{open ? "− cerrar" : "+ ver detalle"}</div>
                     </div>
-                    <div style={{ color: "rgba(255,255,255,0.55)", fontSize: 13, marginTop: 10, lineHeight: 1.5 }}>{s.desc}</div>
-                    <div style={{ color: "rgba(255,255,255,0.25)", fontSize: 11, marginTop: 8, textAlign: "right" }}>{open ? "▲ menos" : "▼ más info"}</div>
+                    <div style={{ textAlign: "right", borderLeft: `1px dashed ${T.line}`, paddingLeft: 16, flexShrink: 0, display: "flex", flexDirection: "column", justifyContent: "center" }}>
+                      <div style={{ ...mono, color: T.ink, fontWeight: 500, fontSize: 19 }}>{fmt(s.precios[vehiculo])}</div>
+                    </div>
                   </div>
                   {open && (
-                    <div style={{ padding: "0 20px 20px", borderTop: `1px solid ${cs.color}44` }}>
-                      <div style={{ color: "rgba(255,255,255,0.4)", fontSize: 11, fontWeight: 700, textTransform: "uppercase", marginBottom: 10, marginTop: 14 }}>¿Qué incluye?</div>
+                    <div style={{ padding: "0 20px 24px", borderTop: `1px dashed ${T.line}` }}>
+                      <div style={{ ...eyebrow, marginTop: 20 }}>Incluye</div>
                       {s.incluye.map((item, i) => (
-                        <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 7 }}>
-                          <div style={{ width: 6, height: 6, borderRadius: "50%", background: cs.color, flexShrink: 0 }} />
-                          <span style={{ color: "rgba(255,255,255,0.7)", fontSize: 13 }}>{item}</span>
+                        <div key={i} style={{ display: "flex", gap: 10, marginBottom: 8, fontSize: 13.5, color: T.inkSoft }}>
+                          <span style={{ color: T.brass }}>–</span>{item}
                         </div>
                       ))}
-                      <div style={{ display: "flex", gap: 10, marginTop: 18 }}>
-                        <button onClick={() => { setAgenda(a => ({ ...a, servicio: s.nombre, vehiculo: VEHICULOS[vehiculo] })); setTab("agendar"); }} style={{ flex: 1, background: "linear-gradient(135deg, #00b4ff, #0066cc)", border: "none", color: "white", padding: "12px", borderRadius: 12, fontWeight: 700, cursor: "pointer", fontSize: 13 }}>📅 Agendar</button>
-                        <button onClick={() => cotizarWhatsApp(s)} style={{ flex: 1, background: "#25d36622", border: "1px solid #25d36666", color: "#25d366", padding: "12px", borderRadius: 12, fontWeight: 700, cursor: "pointer", fontSize: 13 }}>💬 WhatsApp</button>
+                      <div style={{ display: "flex", gap: 10, marginTop: 20, flexWrap: "wrap" }}>
+                        <button onClick={() => { setAgenda(a => ({ ...a, servicio: s.nombre, vehiculo: VEHICULOS[vehiculo] })); setTab("agendar"); }} style={btnPrimary}>Agendar</button>
+                        <button onClick={() => cotizarWhatsApp(s)} style={btnWhats}>WhatsApp</button>
                       </div>
                     </div>
                   )}
@@ -332,9 +375,9 @@ export default function ClienteApp() {
               );
             })}
 
-            <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 14, padding: "16px 18px", marginTop: 8 }}>
-              <div style={{ color: "rgba(255,255,255,0.45)", fontSize: 12, lineHeight: 1.7 }}>
-                📌 Servicio a domicilio sin costo adicional dentro de la zona de cobertura · Se requiere acceso a toma de agua y corriente eléctrica · Precios pueden variar según estado del vehículo y suciedad excesiva (pelo de mascota, vómito, etc.) — cualquier duda, contáctanos por WhatsApp
+            <div style={{ borderTop: `1px solid ${T.line}`, paddingTop: 18, marginTop: 20 }}>
+              <div style={{ color: T.inkFaint, fontSize: 12, lineHeight: 1.7 }}>
+                Servicio a domicilio sin costo adicional dentro de la zona de cobertura. Se requiere acceso a toma de agua y corriente eléctrica. Los precios pueden variar según el estado del vehículo y suciedad excesiva — cualquier duda, contáctanos por WhatsApp.
               </div>
             </div>
           </div>
@@ -345,55 +388,56 @@ export default function ClienteApp() {
           <div>
             {agendaStep === 1 ? (
               <>
-                <div style={{ color: "white", fontWeight: 800, fontSize: 18, marginBottom: 6 }}>📅 Agendar cita</div>
-                <div style={{ color: "rgba(255,255,255,0.45)", fontSize: 13, marginBottom: 22 }}>Llena el formulario. Tu cita queda pendiente de confirmación.</div>
+                <span style={eyebrow}>Agendar cita</span>
+                <div style={{ ...serif, fontWeight: 600, fontSize: 26, marginBottom: 8 }}>Reserva tu servicio</div>
+                <div style={{ color: T.inkSoft, fontSize: 13.5, marginBottom: 32 }}>Llena el formulario. Tu cita queda pendiente de confirmación por WhatsApp.</div>
 
                 {[
                   { label: "Tu nombre *", key: "nombre", type: "text", placeholder: "¿Cómo te llamamos?" },
                   { label: "Tu teléfono / WhatsApp *", key: "telefono", type: "tel", placeholder: "55 1234 5678" },
                   { label: "Dirección del servicio *", key: "direccion", type: "text", placeholder: "Calle, número, colonia, ciudad, C.P." },
                 ].map(f => (
-                  <div key={f.key} style={{ marginBottom: 14 }}>
+                  <div key={f.key} style={{ marginBottom: 22 }}>
                     <label style={lbl}>{f.label}</label>
                     <input type={f.type} placeholder={f.placeholder} value={agenda[f.key]} onChange={e => setAgenda(a => ({ ...a, [f.key]: e.target.value }))} style={inp} />
                   </div>
                 ))}
 
-                <div style={{ marginBottom: 14 }}>
+                <div style={{ marginBottom: 22 }}>
                   <label style={lbl}>Servicio que deseas *</label>
                   <select value={agenda.servicio} onChange={e => setAgenda(a => ({ ...a, servicio: e.target.value, hora: "" }))} style={inp}>
-                    <option value="" style={{ background: "#0d1f3c" }}>Selecciona un servicio...</option>
-                    {CATALOGO.map(s => <option key={s.id} value={s.nombre} style={{ background: "#0d1f3c" }}>{s.icono} {s.nombre} ({s.duracion})</option>)}
+                    <option value="">Selecciona un servicio...</option>
+                    {CATALOGO.map(s => <option key={s.id} value={s.nombre}>{s.nombre} ({s.duracion})</option>)}
                   </select>
                 </div>
 
-                <div style={{ marginBottom: 14 }}>
+                <div style={{ marginBottom: 22 }}>
                   <label style={lbl}>Tipo de vehículo *</label>
                   <select value={agenda.vehiculo} onChange={e => setAgenda(a => ({ ...a, vehiculo: e.target.value }))} style={inp}>
-                    {VEHICULOS.map(v => <option key={v} value={v} style={{ background: "#0d1f3c" }}>{v}</option>)}
+                    {VEHICULOS.map(v => <option key={v} value={v}>{v}</option>)}
                   </select>
                 </div>
 
-                <div style={{ marginBottom: 14 }}>
+                <div style={{ marginBottom: 22 }}>
                   <label style={lbl}>Fecha *</label>
                   <input type="date" value={agenda.fecha} min={new Date().toISOString().split("T")[0]} disabled={!agenda.servicio} onChange={e => setAgenda(a => ({ ...a, fecha: e.target.value, hora: "" }))} style={{ ...inp, opacity: agenda.servicio ? 1 : 0.4 }} />
-                  {!agenda.servicio && <div style={{ color: "rgba(255,255,255,0.35)", fontSize: 11, marginTop: 6 }}>Primero elige un servicio para ver fechas disponibles</div>}
+                  {!agenda.servicio && <div style={{ color: T.inkFaint, fontSize: 11.5, marginTop: 8 }}>Primero elige un servicio para ver fechas disponibles.</div>}
                 </div>
 
                 {agenda.fecha && agenda.servicio && (
-                  <div style={{ marginBottom: 14 }}>
+                  <div style={{ marginBottom: 22 }}>
                     <label style={lbl}>Hora disponible *</label>
-                    <div style={{ color: "rgba(255,255,255,0.35)", fontSize: 11, marginBottom: 10 }}>Este servicio dura aprox. {CATALOGO.find(s => s.nombre === agenda.servicio)?.duracion} — el sistema ya considera tiempo de traslado entre citas</div>
+                    <div style={{ color: T.inkFaint, fontSize: 11.5, marginBottom: 12 }}>Este servicio dura aprox. {CATALOGO.find(s => s.nombre === agenda.servicio)?.duracion} — el sistema ya considera tiempo de traslado entre citas.</div>
                     {cargandoHoras ? (
-                      <div style={{ color: "rgba(255,255,255,0.4)", fontSize: 13, padding: "10px 0" }}>Consultando disponibilidad...</div>
+                      <div style={{ color: T.inkSoft, fontSize: 13, padding: "10px 0" }}>Consultando disponibilidad...</div>
                     ) : horasDisponibles.length === 0 ? (
-                      <div style={{ color: "#f59e0b", fontSize: 13, background: "rgba(245,158,11,0.1)", border: "1px solid rgba(245,158,11,0.3)", borderRadius: 10, padding: "12px 14px" }}>
+                      <div style={{ color: T.error, fontSize: 13, background: T.errorSoft, padding: "14px 16px", borderLeft: `2px solid ${T.error}` }}>
                         No hay horarios disponibles ese día para este servicio. Intenta otra fecha o contáctanos por WhatsApp.
                       </div>
                     ) : (
                       <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                         {horasDisponibles.map(h => (
-                          <button key={h} onClick={() => setAgenda(a => ({ ...a, hora: h }))} style={{ padding: "9px 16px", borderRadius: 10, border: agenda.hora === h ? "2px solid #00b4ff" : "1px solid rgba(255,255,255,0.15)", background: agenda.hora === h ? "rgba(0,180,255,0.2)" : "rgba(255,255,255,0.05)", color: agenda.hora === h ? "#00b4ff" : "white", fontWeight: agenda.hora === h ? 700 : 500, cursor: "pointer", fontSize: 13 }}>
+                          <button key={h} onClick={() => setAgenda(a => ({ ...a, hora: h }))} style={{ ...mono, padding: "9px 14px", border: agenda.hora === h ? `1px solid ${T.marine}` : `1px solid ${T.line}`, background: agenda.hora === h ? T.marineSoft : "transparent", color: agenda.hora === h ? T.marine : T.ink, fontWeight: agenda.hora === h ? 600 : 400, cursor: "pointer", fontSize: 13 }}>
                             {h}
                           </button>
                         ))}
@@ -402,25 +446,25 @@ export default function ClienteApp() {
                   </div>
                 )}
 
-                <div style={{ marginBottom: 20 }}>
+                <div style={{ marginBottom: 30 }}>
                   <label style={lbl}>Notas adicionales (opcional)</label>
                   <input type="text" placeholder="Ej: portón azul, perro en casa, estaciono en calle..." value={agenda.notas} onChange={e => setAgenda(a => ({ ...a, notas: e.target.value }))} style={inp} />
                 </div>
 
-                {agendaError && <div style={{ color: "#ef4444", fontSize: 13, marginBottom: 14, background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.3)", borderRadius: 10, padding: "10px 14px" }}>{agendaError}</div>}
+                {agendaError && <div style={{ color: T.error, fontSize: 13, marginBottom: 20, background: T.errorSoft, padding: "12px 16px", borderLeft: `2px solid ${T.error}` }}>{agendaError}</div>}
 
-                <button onClick={confirmarCita} disabled={enviando} style={{ width: "100%", background: enviando ? "rgba(37,211,102,0.4)" : "linear-gradient(135deg, #25d366, #128c5e)", border: "none", color: "white", padding: "15px", borderRadius: 14, fontWeight: 800, cursor: enviando ? "not-allowed" : "pointer", fontSize: 15 }}>
-                  {enviando ? "Enviando..." : "📲 Confirmar por WhatsApp"}
+                <button onClick={confirmarCita} disabled={enviando} style={{ ...btnWhats, width: "100%", opacity: enviando ? 0.5 : 1, cursor: enviando ? "not-allowed" : "pointer", fontSize: 14.5, padding: "16px" }}>
+                  {enviando ? "Enviando..." : "Confirmar por WhatsApp"}
                 </button>
-                <div style={{ color: "rgba(255,255,255,0.3)", fontSize: 11, textAlign: "center", marginTop: 10 }}>Tu cita queda registrada y pendiente de confirmación del equipo</div>
+                <div style={{ color: T.inkFaint, fontSize: 11, textAlign: "center", marginTop: 14 }}>Tu cita queda registrada y pendiente de confirmación del equipo.</div>
               </>
             ) : (
-              <div style={{ textAlign: "center", padding: "40px 20px" }}>
-                <div style={{ fontSize: 60, marginBottom: 16 }}>🎉</div>
-                <div style={{ color: "white", fontWeight: 800, fontSize: 20, marginBottom: 10 }}>¡Cita registrada!</div>
-                <div style={{ color: "rgba(255,255,255,0.55)", fontSize: 14, lineHeight: 1.6, marginBottom: 28 }}>Tu cita está pendiente de confirmación. Te contactaremos por WhatsApp para confirmarla. ¡Gracias por elegirnos!</div>
-                <button onClick={() => { setAgendaStep(1); setAgenda({ nombre: "", telefono: "", direccion: "", servicio: "", vehiculo: VEHICULOS[0], fecha: "", hora: "", notas: "" }); }} style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)", color: "white", padding: "12px 28px", borderRadius: 14, fontWeight: 700, cursor: "pointer", fontSize: 14 }}>
-                  Nueva cita
+              <div style={{ textAlign: "center", padding: "60px 10px" }}>
+                <div style={{ width: 56, height: 56, borderRadius: "50%", border: `1px solid ${T.brass}`, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 24px", ...mono, fontSize: 22, color: T.brass }}>✓</div>
+                <div style={{ ...serif, fontWeight: 600, fontSize: 24, marginBottom: 12 }}>Cita registrada</div>
+                <div style={{ color: T.inkSoft, fontSize: 14, lineHeight: 1.7, marginBottom: 32, maxWidth: 360, margin: "0 auto 32px" }}>Tu cita está pendiente de confirmación. Te contactaremos por WhatsApp. Gracias por elegirnos.</div>
+                <button onClick={() => { setAgendaStep(1); setAgenda({ nombre: "", telefono: "", direccion: "", servicio: "", vehiculo: VEHICULOS[0], fecha: "", hora: "", notas: "" }); }} style={btnGhost}>
+                  Agendar otra cita
                 </button>
               </div>
             )}
@@ -430,66 +474,58 @@ export default function ClienteApp() {
         {/* ── FIDELIDAD ── */}
         {tab === "fidelidad" && (
           <div>
-            <div style={{ color: "white", fontWeight: 800, fontSize: 18, marginBottom: 4 }}>🎁 Mi Tarjeta de Fidelidad</div>
-            <div style={{ color: "rgba(255,255,255,0.45)", fontSize: 13, marginBottom: 24 }}>Completa {FIDELIDAD_TOTAL} servicios y gana uno gratis.</div>
+            <span style={eyebrow}>Fidelidad</span>
+            <div style={{ ...serif, fontWeight: 600, fontSize: 26, marginBottom: 8 }}>Tu tarjeta de sellos</div>
+            <div style={{ color: T.inkSoft, fontSize: 13.5, marginBottom: 32 }}>Completa {FIDELIDAD_TOTAL} servicios y el siguiente lavado exterior es gratis.</div>
 
-            <div style={{ background: "linear-gradient(135deg, #0d2347, #1a3a6b)", border: "2px solid rgba(0,180,255,0.35)", borderRadius: 22, padding: "28px 24px", marginBottom: 24, boxShadow: "0 8px 32px rgba(0,0,0,0.4)" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
-                <div>
-                  <div style={{ color: "white", fontWeight: 800, fontSize: 16 }}>Punto Cero Detallado</div>
-                  <div style={{ color: "rgba(255,255,255,0.4)", fontSize: 11 }}>Tarjeta de cliente frecuente</div>
-                </div>
-                <div style={{ width: 42, height: 42, borderRadius: "50%", background: "linear-gradient(135deg, #00b4ff, #0066cc)", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, color: "white", fontSize: 18 }}>P</div>
+            <div style={{ background: T.surface, border: `1px solid ${T.line}`, padding: "30px 26px", marginBottom: 28, position: "relative" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 26, borderBottom: `1px dashed ${T.line}`, paddingBottom: 20 }}>
+                <div style={{ ...serif, fontWeight: 600, fontSize: 17 }}>Punto Cero Detallado</div>
+                <div style={{ ...mono, color: T.brass, fontSize: 15 }}>{sellos} / {FIDELIDAD_TOTAL}</div>
               </div>
 
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 10, marginBottom: 20 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 14, marginBottom: 26 }}>
                 {Array.from({ length: FIDELIDAD_TOTAL }).map((_, i) => (
-                  <div key={i} style={{ aspectRatio: "1", borderRadius: 12, border: i < sellos ? "2px solid #00b4ff" : "2px dashed rgba(255,255,255,0.15)", background: i < sellos ? "rgba(0,180,255,0.2)" : "rgba(255,255,255,0.03)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, transition: "all 0.3s" }}>
-                    {i < sellos ? "🚗" : ""}
+                  <div key={i} style={{ aspectRatio: "1", borderRadius: "50%", border: i < sellos ? `1px solid ${T.brass}` : `1px dashed ${T.line}`, background: i < sellos ? T.brassSoft : "transparent", display: "flex", alignItems: "center", justifyContent: "center", ...mono, fontSize: 13, color: T.brass }}>
+                    {i < sellos ? "✓" : ""}
                   </div>
                 ))}
               </div>
 
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <div style={{ color: "rgba(255,255,255,0.5)", fontSize: 12 }}>{sellos}/{FIDELIDAD_TOTAL} servicios completados</div>
-                <div style={{ color: "#00b4ff", fontWeight: 700, fontSize: 12 }}>{FIDELIDAD_TOTAL - sellos} para tu regalo 🎁</div>
+              <div style={{ height: 1, background: T.line, position: "relative", marginBottom: 8 }}>
+                <div style={{ height: 1, width: `${(sellos / FIDELIDAD_TOTAL) * 100}%`, background: T.brass }} />
               </div>
-
-              <div style={{ marginTop: 12, height: 6, background: "rgba(255,255,255,0.1)", borderRadius: 10, overflow: "hidden" }}>
-                <div style={{ height: "100%", width: `${(sellos / FIDELIDAD_TOTAL) * 100}%`, background: "linear-gradient(90deg, #00b4ff, #0066cc)", borderRadius: 10, transition: "width 0.4s" }} />
-              </div>
+              <div style={{ color: T.inkFaint, fontSize: 11.5 }}>{FIDELIDAD_TOTAL - sellos} servicios más para tu regalo</div>
             </div>
 
             {sellos >= FIDELIDAD_TOTAL && (
-              <div style={{ background: "linear-gradient(135deg, rgba(34,197,94,0.2), rgba(16,163,74,0.1))", border: "2px solid #22c55e", borderRadius: 18, padding: "22px 20px", marginBottom: 20, textAlign: "center" }}>
-                <div style={{ fontSize: 40, marginBottom: 10 }}>🏆</div>
-                <div style={{ color: "#22c55e", fontWeight: 800, fontSize: 18, marginBottom: 6 }}>¡Felicidades! Ganaste un servicio gratis</div>
-                <div style={{ color: "rgba(255,255,255,0.6)", fontSize: 13, marginBottom: 16 }}>Muéstrale esta pantalla a tu detallador para canjear tu premio.</div>
-                <button onClick={() => abrirWhatsApp("Hola! Completé mi tarjeta de fidelidad y quiero canjear mi servicio gratuito 🎁")} style={{ background: "#25d366", border: "none", color: "white", padding: "12px 24px", borderRadius: 12, fontWeight: 700, cursor: "pointer", fontSize: 14 }}>💬 Canjear por WhatsApp</button>
+              <div style={{ border: `1px solid ${T.brass}`, background: T.brassSoft, padding: "26px 24px", marginBottom: 24, textAlign: "center" }}>
+                <div style={{ ...serif, fontWeight: 600, fontSize: 19, marginBottom: 8 }}>Ganaste un servicio gratis</div>
+                <div style={{ color: T.inkSoft, fontSize: 13.5, marginBottom: 20 }}>Muéstrale esta pantalla a tu detallador para canjear tu premio.</div>
+                <button onClick={() => abrirWhatsApp("Hola! Completé mi tarjeta de fidelidad y quiero canjear mi servicio gratuito 🎁")} style={btnWhats}>Canjear por WhatsApp</button>
               </div>
             )}
 
-            <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 14, padding: "16px 18px", marginBottom: 16 }}>
-              <div style={{ color: "rgba(255,255,255,0.5)", fontSize: 12, lineHeight: 1.7 }}>
-                ℹ️ Cada sello representa un servicio completado. Al llegar a {FIDELIDAD_TOTAL} servicios recibes <strong style={{ color: "white" }}>un lavado exterior gratis</strong>. Los sellos son registrados por tu detallador al finalizar cada servicio.
+            <div style={{ borderTop: `1px solid ${T.line}`, paddingTop: 18, marginBottom: 24 }}>
+              <div style={{ color: T.inkFaint, fontSize: 12, lineHeight: 1.7 }}>
+                Cada sello representa un servicio completado. Al llegar a {FIDELIDAD_TOTAL} servicios recibes un lavado exterior gratis. Los sellos los registra tu detallador al finalizar cada servicio.
               </div>
             </div>
 
-            <button onClick={agregarSello} disabled={sellos >= FIDELIDAD_TOTAL} style={{ width: "100%", background: sellos >= FIDELIDAD_TOTAL ? "rgba(255,255,255,0.05)" : "linear-gradient(135deg, #00b4ff, #0066cc)", border: "none", color: sellos >= FIDELIDAD_TOTAL ? "rgba(255,255,255,0.3)" : "white", padding: "14px", borderRadius: 14, fontWeight: 700, cursor: sellos >= FIDELIDAD_TOTAL ? "not-allowed" : "pointer", fontSize: 14, marginBottom: 10 }}>
-              {sellos >= FIDELIDAD_TOTAL ? "🎁 ¡Tarjeta completa!" : "➕ Agregar sello (uso del detallador)"}
+            <button onClick={agregarSello} disabled={sellos >= FIDELIDAD_TOTAL} style={{ ...btnGhost, width: "100%", opacity: sellos >= FIDELIDAD_TOTAL ? 0.35 : 1, cursor: sellos >= FIDELIDAD_TOTAL ? "not-allowed" : "pointer", marginBottom: 12 }}>
+              {sellos >= FIDELIDAD_TOTAL ? "Tarjeta completa" : "Agregar sello (uso del detallador)"}
             </button>
-            {sellos > 0 && <button onClick={resetFidelidad} style={{ width: "100%", background: "transparent", border: "1px solid rgba(239,68,68,0.3)", color: "rgba(239,68,68,0.6)", padding: "10px", borderRadius: 12, fontWeight: 600, cursor: "pointer", fontSize: 12 }}>Reiniciar tarjeta</button>}
+            {sellos > 0 && <button onClick={resetFidelidad} style={{ width: "100%", background: "transparent", border: "none", color: T.inkFaint, padding: "8px", cursor: "pointer", fontSize: 12, fontFamily: "'Inter', sans-serif", textDecoration: "underline" }}>Reiniciar tarjeta</button>}
           </div>
         )}
       </div>
 
       {/* BOTTOM NAV */}
-      <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, background: "rgba(10,22,40,0.95)", backdropFilter: "blur(20px)", borderTop: "1px solid rgba(255,255,255,0.08)", display: "flex", zIndex: 50 }}>
+      <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, background: T.paper, borderTop: `1px solid ${T.line}`, display: "flex", zIndex: 50 }}>
         {TABS.map(t => (
-          <button key={t.id} onClick={() => setTab(t.id)} style={{ flex: 1, padding: "12px 4px", background: "transparent", border: "none", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: 3 }}>
-            <span style={{ fontSize: 20 }}>{t.icon}</span>
-            <span style={{ fontSize: 10, fontWeight: tab === t.id ? 700 : 500, color: tab === t.id ? "#00b4ff" : "rgba(255,255,255,0.35)" }}>{t.label}</span>
-            {tab === t.id && <div style={{ width: 16, height: 2, background: "#00b4ff", borderRadius: 2 }} />}
+          <button key={t.id} onClick={() => setTab(t.id)} style={{ flex: 1, padding: "16px 4px 14px", background: "transparent", border: "none", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: 6, fontFamily: "'Inter', sans-serif" }}>
+            <span style={{ fontSize: 12, fontWeight: tab === t.id ? 600 : 400, color: tab === t.id ? T.ink : T.inkFaint, letterSpacing: 0.3 }}>{t.label}</span>
+            <div style={{ width: 16, height: 2, background: tab === t.id ? T.brass : "transparent" }} />
           </button>
         ))}
       </div>
