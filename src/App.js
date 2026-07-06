@@ -52,6 +52,12 @@ const CAT_STYLE = {
 };
 
 // Posts de Instagram destacados — para agregar uno nuevo: usuario, link al post, e imagen (opcional)
+const MARCAS = [
+  { nombre: "Black+Decker", desc: "Hidrolavadora", color: "#1C3A56", logo: "" },
+  { nombre: "Karcher", desc: "Lava-aspiradora", color: "#9C7A3C", logo: "" },
+  { nombre: "Koblenz", desc: "Aspiradora", color: "#3F6357", logo: "" },
+];
+
 // Video de la oferta — pon aquí el link (mp4) cuando lo tengas
 const PROMO_VIDEO_URL = "";
 
@@ -317,6 +323,9 @@ export default function ClienteApp() {
         .pc-card { transition: box-shadow .18s ease, transform .18s ease; }
         .pc-input:focus { border-bottom-color: ${T.marine} !important; }
         .pc-tab-content { animation: pc-fade .25s ease; }
+        .pc-marquee { animation: pc-scroll 18s linear infinite; }
+        .pc-marquee:hover { animation-play-state: paused; }
+        @keyframes pc-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
         @keyframes pc-fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
         select.pc-input { cursor: pointer; }
         ::selection { background: ${T.brassSoft}; }
@@ -405,21 +414,20 @@ export default function ClienteApp() {
             <div style={{ height: 1, background: T.line, margin: "36px 0" }} />
 
             <span style={eyebrow}>Conoce nuestras marcas</span>
-            <div style={{ display: "flex", gap: 12, overflowX: "auto", paddingBottom: 8, marginLeft: -20, marginRight: -20, paddingLeft: 20, paddingRight: 20, scrollbarWidth: "none" }}>
-              {[
-                { nombre: "Black+Decker", desc: "Hidrolavadora", color: T.marine, logo: "" },
-                { nombre: "Karcher", desc: "Lava-aspiradora", color: T.brass, logo: "" },
-                { nombre: "Koblenz", desc: "Aspiradora", color: T.teal, logo: "" },
-              ].map(m => (
-                <div key={m.nombre} style={{ flex: "0 0 auto", width: 150, background: T.surface, border: `1px solid ${T.line}`, borderTop: `3px solid ${m.color}`, padding: "20px 16px" }}>
-                  <div style={{ height: 32, marginBottom: 12, display: "flex", alignItems: "center" }}>
-                    {m.logo ? <img src={m.logo} alt={m.nombre} style={{ maxHeight: 32, maxWidth: "100%", objectFit: "contain" }} /> : <span style={{ ...mono, fontSize: 9, color: T.inkFaint }}>Logo</span>}
+            <div style={{ overflow: "hidden", marginLeft: -20, marginRight: -20, maskImage: "linear-gradient(90deg, transparent, black 8%, black 92%, transparent)" }}>
+              <div className="pc-marquee" style={{ display: "flex", gap: 12, width: "max-content", paddingLeft: 20 }}>
+                {[...MARCAS, ...MARCAS].map((m, i) => (
+                  <div key={i} style={{ flex: "0 0 auto", width: 150, background: T.surface, border: `1px solid ${T.line}`, borderTop: `3px solid ${m.color}`, padding: "20px 16px" }}>
+                    <div style={{ height: 32, marginBottom: 12, display: "flex", alignItems: "center" }}>
+                      {m.logo ? <img src={m.logo} alt={m.nombre} style={{ maxHeight: 32, maxWidth: "100%", objectFit: "contain" }} /> : <span style={{ ...mono, fontSize: 9, color: T.inkFaint }}>Logo</span>}
+                    </div>
+                    <div style={{ ...serif, fontWeight: 600, fontSize: 15, marginBottom: 4 }}>{m.nombre}</div>
+                    <div style={{ ...mono, color: T.inkFaint, fontSize: 10.5, textTransform: "uppercase", letterSpacing: 1 }}>{m.desc}</div>
                   </div>
-                  <div style={{ ...serif, fontWeight: 600, fontSize: 15, marginBottom: 4 }}>{m.nombre}</div>
-                  <div style={{ ...mono, color: T.inkFaint, fontSize: 10.5, textTransform: "uppercase", letterSpacing: 1 }}>{m.desc}</div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
+
 
             <div style={{ height: 1, background: T.line, margin: "36px 0" }} />
 
@@ -702,7 +710,7 @@ export default function ClienteApp() {
             <div style={{ color: T.inkSoft, fontSize: 13.5, lineHeight: 1.8, marginBottom: 24 }}>
               <p><strong style={{ color: T.ink }}>Datos que recopilamos.</strong> Al agendar una cita recopilamos tu nombre, teléfono, dirección del servicio, tipo de vehículo y notas adicionales que nos proporciones.</p>
               <p><strong style={{ color: T.ink }}>Para qué los usamos.</strong> Únicamente para coordinar, confirmar y dar seguimiento a tu servicio, y para tu tarjeta de fidelidad. Nunca compartimos ni vendemos tu información a terceros.</p>
-              <p><strong style={{ color: T.ink }}>Dónde se guardan.</strong> Tus datos se almacenan de forma segura en nuestra base de datos (Supabase) y solo el equipo de Punto Cero Detallado tiene acceso a ellos.</p>
+              <p><strong style={{ color: T.ink }}>Dónde se guardan.</strong> Tus datos se almacenan de forma segura en nuestra base de datos y solo el equipo de Punto Cero Detallado tiene acceso a ellos.</p>
               <p><strong style={{ color: T.ink }}>WhatsApp.</strong> Al confirmar una cita se abre WhatsApp para enviarnos los datos directamente; ese mensaje queda sujeto también a las políticas de privacidad de WhatsApp.</p>
               <p><strong style={{ color: T.ink }}>Tus derechos.</strong> Puedes pedirnos en cualquier momento que eliminemos tu información contactándonos por WhatsApp.</p>
             </div>
@@ -722,7 +730,7 @@ export default function ClienteApp() {
             <div style={{ color: T.inkSoft, fontSize: 13.5, lineHeight: 1.8 }}>
               <p><strong style={{ color: T.ink }}>Datos que recopilamos.</strong> Al agendar una cita recopilamos tu nombre, teléfono, dirección del servicio, tipo de vehículo y notas adicionales que nos proporciones.</p>
               <p><strong style={{ color: T.ink }}>Para qué los usamos.</strong> Únicamente para coordinar, confirmar y dar seguimiento a tu servicio, y para tu tarjeta de fidelidad. Nunca compartimos ni vendemos tu información a terceros.</p>
-              <p><strong style={{ color: T.ink }}>Dónde se guardan.</strong> Tus datos se almacenan de forma segura en nuestra base de datos (Supabase) y solo el equipo de Punto Cero Detallado tiene acceso a ellos.</p>
+              <p><strong style={{ color: T.ink }}>Dónde se guardan.</strong> Tus datos se almacenan de forma segura en nuestra base de datos y solo el equipo de Punto Cero Detallado tiene acceso a ellos.</p>
               <p><strong style={{ color: T.ink }}>WhatsApp.</strong> Al confirmar una cita se abre WhatsApp para enviarnos los datos directamente; ese mensaje queda sujeto también a las políticas de privacidad de WhatsApp.</p>
               <p><strong style={{ color: T.ink }}>Tus derechos.</strong> Puedes pedirnos en cualquier momento que eliminemos tu información contactándonos por WhatsApp.</p>
             </div>
