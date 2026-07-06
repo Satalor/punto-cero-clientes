@@ -59,12 +59,16 @@ const INSTA_POSTS = [
   { usuario: "@puntocerodetallado", link: "https://www.instagram.com/puntocerodetallado/", imagen: null },
 ];
 
+// Margen mínimo de anticipación para citas el mismo día (minutos)
+const MARGEN_ANTICIPACION_MIN = 60;
+
 const FIDELIDAD_TOTAL = 8;
 const fmt = (n) => new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN", minimumFractionDigits: 0 }).format(n);
 
 // ── STORAGE HELPERS (fidelidad sigue local, eso no necesita compartirse) ─────
-const getSellos = () => { try { return parseInt(localStorage.getItem("pc_sellos") || "0"); } catch { return 0; } };
-const setSellos = (n) => { try { localStorage.setItem("pc_sellos", String(n)); } catch {} };
+// El teléfono se recuerda localmente para no pedirlo cada vez; los sellos viven en Supabase
+const getTelefonoGuardado = () => { try { return localStorage.getItem("pc_telefono") || ""; } catch { return ""; } };
+const setTelefonoGuardado = (t) => { try { localStorage.setItem("pc_telefono", t); } catch {} };
 
 // ── FUENTES (inyectadas una vez) ──────────────────────────────────────────────
 function useFonts() {
@@ -82,6 +86,7 @@ function useFonts() {
 export default function ClienteApp() {
   useFonts();
   const [tab, setTab] = useState("inicio");
+  const [showPrivacidad, setShowPrivacidad] = useState(false);
   const [vehiculo, setVehiculo] = useState(0);
   const [expandido, setExpandido] = useState(null);
   const [filtro, setFiltro] = useState("todos");
@@ -99,8 +104,10 @@ export default function ClienteApp() {
   const [horasDisponibles, setHorasDisponibles] = useState([]);
   const [cargandoHoras, setCargandoHoras] = useState(false);
 
-  // Fidelidad
-  const [sellos, setSellosState] = useState(getSellos);
+  // Fidelidad (por teléfono, en Supabase)
+  const [telefonoFidelidad, setTelefonoFidelidad] = useState(getTelefonoGuardado);
+  const [sellos, setSellosState] = useState(0);
+  const [cargandoFidelidad, setCargandoFidelidad] = useState(false);
   // eslint-disable-next-line no-unused-vars
   const [showPremio, setShowPremio] = useState(false);
 
@@ -138,6 +145,16 @@ export default function ClienteApp() {
     const inicioMin = horaAMinutos(config.hora_inicio);
     const finMin = horaAMinutos(config.hora_fin);
 
+    // Si la fecha elegida es hoy, no mostrar horas ya pasadas (+ margen de anticipación)
+    const ahora = new Date();
+    const esHoy = fecha.toDateString() === ahora.toDateString();
+    const minutoMinimoHoy = ahora.getHours() * 60 + ahora.getMinutes() + MARGEN_ANTICIPACION_MIN;
+    let inicioReal = inicioMin;
+    if (esHoy && minutoMinimoHoy > inicioMin) {
+      const pasos = Math.ceil((minutoMinimoHoy - inicioMin) / 30);
+      inicioReal = inicioMin + pasos * 30;
+    }
+
     // Consultar citas ya existentes para esa fecha (no canceladas), con su servicio para saber cuánto ocupan
     const { data: citasExistentes } = await supabase
       .from("citas")
@@ -155,7 +172,7 @@ export default function ClienteApp() {
 
     // Generar slots cada 30 min y verificar que el servicio completo (con su duración) entre sin chocar con otra cita
     const slots = [];
-    for (let m = inicioMin; m + duracionNueva * 60 <= finMin; m += 30) {
+    for (let m = inicioReal; m + duracionNueva * 60 <= finMin; m += 30) {
       const finNuevo = m + duracionNueva * 60;
       const chocaConOtra = rangosOcupados.some(r => m < r.fin && finNuevo > r.ini);
       if (!chocaConOtra) {
@@ -166,6 +183,26 @@ export default function ClienteApp() {
     setHorasOcupadas(rangosOcupados.map(r => minutosAHora(r.ini)));
     setHorasDisponibles(slots);
     setCargandoHoras(false);
+  };
+
+  // Consultar sellos en Supabase para el teléfono guardado
+  useEffect(() => {
+    if (!telefonoFidelidad) return;
+    consultarSellos(telefonoFidelidad);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const consultarSellos = async (tel) => {
+    setCargandoFidelidad(true);
+    const { data } = await supabase.from("fidelidad").select("sellos").eq("telefono", tel).maybeSingle();
+    setSellosState(data ? data.sellos : 0);
+    setCargandoFidelidad(false);
+  };
+
+  const buscarFidelidad = () => {
+    if (!telefonoFidelidad) return;
+    setTelefonoGuardado(telefonoFidelidad);
+    consultarSellos(telefonoFidelidad);
   };
 
   const abrirWhatsApp = (msg) => window.open(`https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msg)}`, "_blank");
@@ -231,17 +268,23 @@ export default function ClienteApp() {
 
     const msg = `Hola! Quiero agendar una cita:\n👤 *${agenda.nombre}*\n📞 ${agenda.telefono}\n🚗 ${agenda.vehiculo}\n🛠 ${agenda.servicio}\n📅 ${agenda.fecha} a las ${agenda.hora}\n📍 ${agenda.direccion}${agenda.notas ? `\n📝 ${agenda.notas}` : ""}\n\n(Ya registré mi cita en el sistema, queda pendiente de su confirmación)`;
     abrirWhatsApp(msg);
+    setTelefonoGuardado(agenda.telefono);
     setAgendaStep(2);
   };
 
-  const agregarSello = () => {
+  const agregarSello = async () => {
+    if (!telefonoFidelidad) return;
     const nuevo = Math.min(sellos + 1, FIDELIDAD_TOTAL);
     setSellosState(nuevo);
-    setSellos(nuevo);
+    await supabase.from("fidelidad").upsert({ telefono: telefonoFidelidad, sellos: nuevo });
     if (nuevo >= FIDELIDAD_TOTAL) setShowPremio(true);
   };
 
-  const resetFidelidad = () => { setSellosState(0); setSellos(0); setShowPremio(false); };
+  const resetFidelidad = async () => {
+    setSellosState(0);
+    setShowPremio(false);
+    await supabase.from("fidelidad").upsert({ telefono: telefonoFidelidad, sellos: 0 });
+  };
 
   // ── ESTILOS COMPARTIDOS ─────────────────────────────────────────────────────
   const serif = { fontFamily: "'Fraunces', serif" };
@@ -430,10 +473,12 @@ export default function ClienteApp() {
                 </a>
               ))}
             </div>
+
+            <div style={{ textAlign: "center", marginTop: 40 }}>
+              <button onClick={() => setShowPrivacidad(true)} style={{ background: "none", border: "none", color: T.inkFaint, fontSize: 11.5, cursor: "pointer", textDecoration: "underline", fontFamily: "'Inter', sans-serif" }}>Política de privacidad</button>
+            </div>
           </div>
         )}
-
-        {/* ── SERVICIOS ── */}
         {tab === "servicios" && (
           <div>
             <div style={{ marginBottom: 28 }}>
@@ -588,6 +633,21 @@ export default function ClienteApp() {
             <div style={{ ...serif, fontWeight: 600, fontSize: 26, marginBottom: 8 }}>Tu tarjeta de sellos</div>
             <div style={{ color: T.inkSoft, fontSize: 13.5, marginBottom: 32 }}>Completa {FIDELIDAD_TOTAL} servicios y el siguiente lavado exterior es gratis.</div>
 
+            <div style={{ marginBottom: 28 }}>
+              <label style={lbl}>Tu teléfono</label>
+              <div style={{ display: "flex", gap: 10 }}>
+                <input type="tel" placeholder="55 1234 5678" value={telefonoFidelidad} onChange={e => setTelefonoFidelidad(e.target.value)} style={{ ...inp, flex: 1 }} />
+                <button onClick={buscarFidelidad} style={btnGhost}>Buscar</button>
+              </div>
+              <div style={{ color: T.inkFaint, fontSize: 11, marginTop: 8 }}>Es el mismo con el que agendas tus citas.</div>
+            </div>
+
+            {!telefonoFidelidad ? (
+              <div style={{ color: T.inkFaint, fontSize: 13, padding: "20px 0" }}>Ingresa tu teléfono para ver tu tarjeta.</div>
+            ) : cargandoFidelidad ? (
+              <div style={{ color: T.inkSoft, fontSize: 13, padding: "20px 0" }}>Consultando tu tarjeta...</div>
+            ) : (
+            <>
             <div style={{ background: T.surface, border: `1px solid ${T.line}`, padding: "30px 26px", marginBottom: 28, position: "relative" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 26, borderBottom: `1px dashed ${T.line}`, paddingBottom: 20 }}>
                 <div style={{ ...serif, fontWeight: 600, fontSize: 17 }}>Punto Cero Detallado</div>
@@ -626,9 +686,30 @@ export default function ClienteApp() {
               {sellos >= FIDELIDAD_TOTAL ? "Tarjeta completa" : "Agregar sello (uso del detallador)"}
             </button>
             {sellos > 0 && <button onClick={resetFidelidad} style={{ width: "100%", background: "transparent", border: "none", color: T.inkFaint, padding: "8px", cursor: "pointer", fontSize: 12, fontFamily: "'Inter', sans-serif", textDecoration: "underline" }}>Reiniciar tarjeta</button>}
+            </>
+            )}
           </div>
         )}
       </div>
+
+      {/* MODAL PRIVACIDAD */}
+      {showPrivacidad && (
+        <div onClick={() => setShowPrivacidad(false)} style={{ position: "fixed", inset: 0, background: "rgba(22,24,28,0.6)", zIndex: 100, display: "flex", alignItems: "flex-end" }}>
+          <div onClick={e => e.stopPropagation()} style={{ background: T.paper, width: "100%", maxHeight: "82vh", overflowY: "auto", padding: "28px 22px 40px", borderTop: `1px solid ${T.line}` }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+              <div style={{ ...serif, fontWeight: 600, fontSize: 20 }}>Política de privacidad</div>
+              <button onClick={() => setShowPrivacidad(false)} style={{ background: "none", border: "none", color: T.inkFaint, fontSize: 22, cursor: "pointer" }}>×</button>
+            </div>
+            <div style={{ color: T.inkSoft, fontSize: 13.5, lineHeight: 1.8 }}>
+              <p><strong style={{ color: T.ink }}>Datos que recopilamos.</strong> Al agendar una cita recopilamos tu nombre, teléfono, dirección del servicio, tipo de vehículo y notas adicionales que nos proporciones.</p>
+              <p><strong style={{ color: T.ink }}>Para qué los usamos.</strong> Únicamente para coordinar, confirmar y dar seguimiento a tu servicio, y para tu tarjeta de fidelidad. Nunca compartimos ni vendemos tu información a terceros.</p>
+              <p><strong style={{ color: T.ink }}>Dónde se guardan.</strong> Tus datos se almacenan de forma segura en nuestra base de datos (Supabase) y solo el equipo de Punto Cero Detallado tiene acceso a ellos.</p>
+              <p><strong style={{ color: T.ink }}>WhatsApp.</strong> Al confirmar una cita se abre WhatsApp para enviarnos los datos directamente; ese mensaje queda sujeto también a las políticas de privacidad de WhatsApp.</p>
+              <p><strong style={{ color: T.ink }}>Tus derechos.</strong> Puedes pedirnos en cualquier momento que eliminemos tu información contactándonos por WhatsApp.</p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* BOTTOM NAV */}
       <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, background: T.paper, borderTop: `1px solid ${T.line}`, display: "flex", zIndex: 50 }}>
