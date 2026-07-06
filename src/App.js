@@ -87,6 +87,8 @@ export default function ClienteApp() {
   useFonts();
   const [tab, setTab] = useState("inicio");
   const [showPrivacidad, setShowPrivacidad] = useState(false);
+  const [aceptoPrivacidad, setAceptoPrivacidad] = useState(() => { try { return localStorage.getItem("pc_acepto_privacidad") === "1"; } catch { return false; } });
+  const aceptarPrivacidad = () => { try { localStorage.setItem("pc_acepto_privacidad", "1"); } catch {} setAceptoPrivacidad(true); };
   const [vehiculo, setVehiculo] = useState(0);
   const [expandido, setExpandido] = useState(null);
   const [filtro, setFiltro] = useState("todos");
@@ -692,7 +694,24 @@ export default function ClienteApp() {
         )}
       </div>
 
-      {/* MODAL PRIVACIDAD */}
+      {/* GATE DE PRIVACIDAD — bloquea la app hasta aceptar */}
+      {!aceptoPrivacidad && (
+        <div style={{ position: "fixed", inset: 0, background: T.paper, zIndex: 200, display: "flex", alignItems: "flex-end" }}>
+          <div style={{ width: "100%", maxHeight: "88vh", overflowY: "auto", padding: "28px 22px 24px", borderTop: `1px solid ${T.line}` }}>
+            <div style={{ ...serif, fontWeight: 600, fontSize: 20, marginBottom: 20 }}>Política de privacidad</div>
+            <div style={{ color: T.inkSoft, fontSize: 13.5, lineHeight: 1.8, marginBottom: 24 }}>
+              <p><strong style={{ color: T.ink }}>Datos que recopilamos.</strong> Al agendar una cita recopilamos tu nombre, teléfono, dirección del servicio, tipo de vehículo y notas adicionales que nos proporciones.</p>
+              <p><strong style={{ color: T.ink }}>Para qué los usamos.</strong> Únicamente para coordinar, confirmar y dar seguimiento a tu servicio, y para tu tarjeta de fidelidad. Nunca compartimos ni vendemos tu información a terceros.</p>
+              <p><strong style={{ color: T.ink }}>Dónde se guardan.</strong> Tus datos se almacenan de forma segura en nuestra base de datos (Supabase) y solo el equipo de Punto Cero Detallado tiene acceso a ellos.</p>
+              <p><strong style={{ color: T.ink }}>WhatsApp.</strong> Al confirmar una cita se abre WhatsApp para enviarnos los datos directamente; ese mensaje queda sujeto también a las políticas de privacidad de WhatsApp.</p>
+              <p><strong style={{ color: T.ink }}>Tus derechos.</strong> Puedes pedirnos en cualquier momento que eliminemos tu información contactándonos por WhatsApp.</p>
+            </div>
+            <button onClick={aceptarPrivacidad} style={{ ...btnPrimary, width: "100%" }}>Acepto la política de privacidad</button>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL PRIVACIDAD (consulta manual desde el link en Inicio) */}
       {showPrivacidad && (
         <div onClick={() => setShowPrivacidad(false)} style={{ position: "fixed", inset: 0, background: "rgba(22,24,28,0.6)", zIndex: 100, display: "flex", alignItems: "flex-end" }}>
           <div onClick={e => e.stopPropagation()} style={{ background: T.paper, width: "100%", maxHeight: "82vh", overflowY: "auto", padding: "28px 22px 40px", borderTop: `1px solid ${T.line}` }}>
