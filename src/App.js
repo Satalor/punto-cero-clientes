@@ -254,8 +254,6 @@ export default function ClienteApp() {
   const btnPrimary = { background: T.marine, border: "none", color: T.paper, padding: "14px 26px", fontWeight: 500, cursor: "pointer", fontSize: 14, fontFamily: "'Inter', sans-serif", letterSpacing: 0.2, transition: "opacity .15s ease, transform .15s ease" };
   const btnGhost = { background: "transparent", border: `1px solid ${T.ink}`, color: T.ink, padding: "13px 26px", fontWeight: 500, cursor: "pointer", fontSize: 14, fontFamily: "'Inter', sans-serif", letterSpacing: 0.2, transition: "background .15s ease" };
   const btnWhats = { background: T.whats, border: "none", color: "#fff", padding: "13px 22px", fontWeight: 500, cursor: "pointer", fontSize: 13.5, fontFamily: "'Inter', sans-serif", transition: "opacity .15s ease" };
-  const hoverIn = (e, bg) => { e.currentTarget.style.background = bg; };
-  const hoverOut = (e, bg) => { e.currentTarget.style.background = bg; };
 
   const TABS = [
     { id: "inicio", label: "Inicio" },
