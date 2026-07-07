@@ -45,7 +45,7 @@ const MARCAS = [
   { nombre: "Koblenz", desc: "Aspiradora", color: "#3F6357", logo: null },
 ];
 
-const PROMO_VIDEO_URL = "";
+const PROMO_VIDEO_URL = "const PROMO_VIDEO_URL = "/promo.mp4";
 
 const INSTA_POSTS = [
   { usuario: "@puntocerodetallado", link: "https://www.instagram.com/puntocerodetallado/", imagen: null },
