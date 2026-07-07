@@ -3,6 +3,3 @@ build/
 .env
 .env.local
 .DS_Store
-git add public/promo.mp4 --force
-git commit -m "agregar video"
-git push
