@@ -216,8 +216,6 @@ const aceptarPrivacidad = () => setAceptoPrivacidad(true);
       return;
     }
 
-    const msg = `Hola! Quiero agendar una cita:\n👤 *${agenda.nombre}*\n📞 ${agenda.telefono}\n🚗 ${agenda.vehiculo}\n🛠 ${agenda.servicio}\n📅 ${agenda.fecha} a las ${agenda.hora}\n📍 ${agenda.ciudad} - ${agenda.zona}, ${agenda.direccion}${agenda.notas ? `\n📝 ${agenda.notas}` : ""}\n\n(Ya registré mi cita en el sistema, queda pendiente de su confirmación)`;
-    abrirWhatsApp(msg);
     setAgendaStep(2);
   };
 
