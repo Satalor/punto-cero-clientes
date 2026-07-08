@@ -40,9 +40,9 @@ const CAT_STYLE = {
 const ANTES_DESPUES = [];
 
 const MARCAS = [
-  { nombre: "Black+Decker", desc: "Hidrolavadora", color: "#1C3A56", logo: "/logos/black-decker.png" },
-  { nombre: "Karcher", desc: "Lava-aspiradora", color: "#9C7A3C", logo: "/logos/karcher.png" },
-  { nombre: "Koblenz", desc: "Aspiradora", color: "#3F6357", logo: "/logos/koblenz.png" },
+  { nombre: "Black+Decker", desc: "Hidrolavadora", color: "#1C3A56", logo: "/black-decker.png" },
+  { nombre: "Karcher", desc: "Lava-aspiradora", color: "#9C7A3C", logo: "/karcher.png" },
+  { nombre: "Koblenz", desc: "Aspiradora", color: "#3F6357", logo: "/koblenz.png" },
 ];
 
 const PROMO_VIDEO_URL = "/promo.mp4";
