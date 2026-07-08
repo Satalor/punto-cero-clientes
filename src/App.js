@@ -68,9 +68,8 @@ function useFonts() {
 export default function ClienteApp() {
   useFonts();
   const [tab, setTab] = useState("inicio");
-  const [showPrivacidad, setShowPrivacidad] = useState(false);
-  const [aceptoPrivacidad, setAceptoPrivacidad] = useState(() => { try { return localStorage.getItem("pc_acepto_privacidad") === "1"; } catch { return false; } });
-  const aceptarPrivacidad = () => { try { localStorage.setItem("pc_acepto_privacidad", "1"); } catch {} setAceptoPrivacidad(true); };
+  const [aceptoPrivacidad, setAceptoPrivacidad] = useState(false);
+  const aceptarPrivacidad = () => setAceptoPrivacidad(true);
   const [vehiculo, setVehiculo] = useState(0);
   const [expandido, setExpandido] = useState(null);
   const [filtro, setFiltro] = useState("todos");
