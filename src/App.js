@@ -12,7 +12,7 @@ const CATALOGO = [
   { id: 1, nombre: "Detallado Exterior", desc: "Carrocería, llantas y vidrios exteriores con hidrolavadora.", duracion: "45 min", duracionBloque: 1.5, cat: "basico", precios: [299, 349, 399], incluye: ["Lavado con hidrolavadora", "Secado completo", "Limpieza de llantas", "Vidrios exteriores"] },
   { id: 2, nombre: "Detallado Interior", desc: "Aspirado, tablero, puertas y vidrios interiores.", duracion: "45 min", duracionBloque: 1.5, cat: "basico", precios: [299, 349, 399], incluye: ["Aspirado de tapetes y asientos", "Limpieza de tablero", "Limpieza de puertas", "Vidrios interiores"] },
   { id: 3, nombre: "Detallado Completo", desc: "Interior + exterior. Nuestro servicio más solicitado.", duracion: "2 hrs", duracionBloque: 2.5, cat: "popular", precios: [549, 649, 749], incluye: ["Todo del lavado exterior", "Todo del lavado interior", "Brillado de llantas", "Ambientador incluido"] },
- 
+
   { id: 5, nombre: "Encerado y Protección", desc: "Cera protectora que cuida tu pintura hasta 3 meses.", duracion: "2-3 hrs", duracionBloque: 3.5, cat: "premium", precios: [699, 849, 999], incluye: ["Lavado previo", "Descontaminación de pintura", "Cera carnauba", "Protección 3 meses"] },
   { id: 6, nombre: "Descontaminación", desc: "Savia, manchas de agua, excremento de aves y más.", duracion: "1.5 hrs", duracionBloque: 2.5, cat: "especial", precios: [499, 599, 699], incluye: ["Lavado previo", "Descontaminante químico", "Clay bar", "Enjuague y secado"] },
   { id: 7, nombre: "Detallado Premium", desc: "Lo mejor de todo. Pulido + encerado + interior y exterior.", duracion: "5-6 hrs", duracionBloque: 6.5, cat: "premium", precios: [1499, 1799, 2099], incluye: ["Detallado completo", "Pulido de pintura", "Encerado y protección", "Limpieza profunda de tapicería", "Restauración de plásticos", "Ambientador premium"] },
@@ -67,10 +67,10 @@ function useFonts() {
 
 export default function ClienteApp() {
   useFonts();
- const [tab, setTab] = useState("inicio");
-const [showPrivacidad, setShowPrivacidad] = useState(false);
-const [aceptoPrivacidad, setAceptoPrivacidad] = useState(false);
-const aceptarPrivacidad = () => setAceptoPrivacidad(true);
+  const [tab, setTab] = useState("inicio");
+  const [showPrivacidad, setShowPrivacidad] = useState(false);
+  const [aceptoPrivacidad, setAceptoPrivacidad] = useState(false);
+  const aceptarPrivacidad = () => setAceptoPrivacidad(true);
   const [vehiculo, setVehiculo] = useState(0);
   const [expandido, setExpandido] = useState(null);
   const [filtro, setFiltro] = useState("todos");
@@ -154,7 +154,7 @@ const aceptarPrivacidad = () => setAceptoPrivacidad(true);
     setCargandoHoras(false);
   };
 
-  const abrirWhatsApp = (msg) => window.open(`https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msg)}`, "_blank");
+  const abrirWhatsApp = (msg) => { window.location.href = `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msg)}`; };
 
   const cotizarWhatsApp = (s) => {
     const msg = `Hola! Me interesa el servicio de *${s.nombre}* para mi ${VEHICULOS[vehiculo]}.\nPrecio: ${fmt(s.precios[vehiculo])}\n¿Tienen disponibilidad?`;
@@ -476,7 +476,7 @@ const aceptarPrivacidad = () => setAceptoPrivacidad(true);
               <>
                 <span style={eyebrow}>Agendar cita</span>
                 <div style={{ ...serif, fontWeight: 600, fontSize: 26, marginBottom: 8 }}>Reserva tu servicio</div>
-                <div style={{ color: T.inkSoft, fontSize: 13.5, marginBottom: 32 }}>Llena el formulario. Tu cita queda pendiente de confirmación por WhatsApp.</div>
+                <div style={{ color: T.inkSoft, fontSize: 13.5, marginBottom: 32 }}>Llena el formulario. Tu cita queda pendiente de confirmación de nuestro equipo.</div>
 
                 {[
                   { label: "Tu nombre *", key: "nombre", type: "text", placeholder: "¿Cómo te llamamos?" },
@@ -569,8 +569,8 @@ const aceptarPrivacidad = () => setAceptoPrivacidad(true);
 
                 {agendaError && <div style={{ color: T.error, fontSize: 13, marginBottom: 20, background: T.errorSoft, padding: "12px 16px", borderLeft: `2px solid ${T.error}` }}>{agendaError}</div>}
 
-                <button onClick={confirmarCita} disabled={enviando} style={{ ...btnWhats, width: "100%", opacity: enviando ? 0.5 : 1, cursor: enviando ? "not-allowed" : "pointer", fontSize: 14.5, padding: "16px" }}>
-                  {enviando ? "Enviando..." : "Confirmar por WhatsApp"}
+                <button onClick={confirmarCita} disabled={enviando} style={{ ...btnPrimary, width: "100%", opacity: enviando ? 0.5 : 1, cursor: enviando ? "not-allowed" : "pointer", fontSize: 14.5, padding: "16px" }}>
+                  {enviando ? "Enviando..." : "Confirmar cita"}
                 </button>
                 <div style={{ color: T.inkFaint, fontSize: 11, textAlign: "center", marginTop: 14 }}>Tu cita queda registrada y pendiente de confirmación del equipo.</div>
               </>
