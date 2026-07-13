@@ -3,15 +3,16 @@ import { supabase } from "./supabaseClient";
 
 // ── DATOS ────────────────────────────────────────────────────────────────────
 const WHATSAPP = "5578944681";
-const VEHICULOS = ["Compacto / Sedán", "Camioneta / SUV", "Van / Pickup"];
+const VEHICULOS = ["Compacto / Sedán", "Camioneta / Crossover", "Van / Pickup"];
 
 const ZONAS_CDMX = ["Azcapotzalco", "Cuauhtémoc", "Benito Juárez"];
 const ZONAS_PUEBLA = ["San Andrés Cholula", "Puebla", "Angelópolis", "Lomas de Angelópolis"];
+const Zonas_EDOMEX = ["Satelite", "Lomas verdes", "Tlanepantla"]
 
 const CATALOGO = [
   { id: 1, nombre: "Detallado Exterior", desc: "Carrocería, llantas y vidrios exteriores con hidrolavadora.", duracion: "45 min", duracionBloque: 1.5, cat: "basico", precios: [299, 349, 399], incluye: ["Lavado con hidrolavadora", "Secado completo", "Limpieza de llantas", "Vidrios exteriores"] },
-  { id: 2, nombre: "Detallado Interior", desc: "Aspirado, tablero, puertas y vidrios interiores.", duracion: "45 min", duracionBloque: 1.5, cat: "basico", precios: [299, 349, 399], incluye: ["Aspirado de tapetes y asientos", "Limpieza de tablero", "Limpieza de puertas", "Vidrios interiores"] },
-  { id: 3, nombre: "Detallado Completo", desc: "Interior + exterior. Nuestro servicio más solicitado.", duracion: "2 hrs", duracionBloque: 2.5, cat: "popular", precios: [549, 649, 749], incluye: ["Todo del lavado exterior", "Todo del lavado interior", "Brillado de llantas", "Ambientador incluido"] },
+  { id: 3, nombre: "Detallado Interior", desc: "Aspirado, tablero, puertas y vidrios interiores.", duracion: "45 min", duracionBloque: 1.5, cat: "basico", precios: [299, 349, 399], incluye: ["Aspirado de tapetes y asientos", "Limpieza de tablero", "Limpieza de puertas", "Vidrios interiores"] },
+  { id: 2, nombre: "Detallado Interior Completo", desc: "Interior + exterior. Nuestro servicio más solicitado.", duracion: "2 hrs", duracionBloque: 2.5, cat: "popular", precios: [549, 649, 749], incluye: ["Todo del lavado exterior", "Todo del lavado interior", "Brillado de llantas", "Ambientador incluido"] },
 
   { id: 5, nombre: "Encerado y Protección", desc: "Cera protectora que cuida tu pintura hasta 3 meses.", duracion: "2-3 hrs", duracionBloque: 3.5, cat: "premium", precios: [699, 849, 999], incluye: ["Lavado previo", "Descontaminación de pintura", "Cera carnauba", "Protección 3 meses"] },
   { id: 6, nombre: "Descontaminación", desc: "Savia, manchas de agua, excremento de aves y más.", duracion: "1.5 hrs", duracionBloque: 2.5, cat: "especial", precios: [499, 599, 699], incluye: ["Lavado previo", "Descontaminante químico", "Clay bar", "Enjuague y secado"] },
