@@ -356,8 +356,8 @@ export default function ClienteApp() {
               </div>
               <div style={{ flex: "1.4 1 260px", background: T.marine, color: T.paper, padding: "26px 24px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
                 <span style={{ ...mono, fontSize: 10, letterSpacing: 2, textTransform: "uppercase", color: T.brass, marginBottom: 10 }}>Oferta de lanzamiento</span>
-                <div style={{ ...serif, fontWeight: 600, fontSize: 32, lineHeight: 1, marginBottom: 10 }}>20% OFF</div>
-                <div style={{ fontSize: 13.5, lineHeight: 1.6, opacity: 0.85, marginBottom: 18 }}>En tu primer servicio. Válido para los primeros 20 clientes de Punto Cero Detallado.</div>
+                <div style={{ ...serif, fontWeight: 600, fontSize: 32, lineHeight: 1, marginBottom: 10 }}>15% OFF</div>
+                <div style={{ fontSize: 13.5, lineHeight: 1.6, opacity: 0.85, marginBottom: 18 }}>Válido solo en tu primera cita con Punto Cero Detallado.</div>
                 <button onClick={() => setTab("agendar")} style={{ ...mono, alignSelf: "flex-start", background: T.paper, border: "none", color: T.marine, padding: "11px 22px", fontWeight: 600, cursor: "pointer", fontSize: 12.5, letterSpacing: 0.5 }}>Agendar ahora</button>
               </div>
             </div>
@@ -703,12 +703,20 @@ export default function ClienteApp() {
               <button onClick={() => setShowPrivacidad(false)} style={{ background: "none", border: "none", color: T.inkFaint, fontSize: 22, cursor: "pointer" }}>×</button>
             </div>
             <div style={{ color: T.inkSoft, fontSize: 13.5, lineHeight: 1.8 }}>
-              <p><strong style={{ color: T.ink }}>Datos que recopilamos.</strong> Al agendar una cita recopilamos tu nombre, teléfono, dirección del servicio, tipo de vehículo, marca/modelo/año y notas adicionales que nos proporciones.</p>
-              <p><strong style={{ color: T.ink }}>Para qué los usamos.</strong> Únicamente para coordinar, confirmar y dar seguimiento a tu servicio. Nunca compartimos ni vendemos tu información a terceros.</p>
-              <p><strong style={{ color: T.ink }}>Dónde se guardan.</strong> Tus datos se almacenan de forma segura en nuestra base de datos y solo el equipo de Punto Cero Detallado tiene acceso a ellos.</p>
-              <p><strong style={{ color: T.ink }}>WhatsApp.</strong> Al confirmar una cita se abre WhatsApp para enviarnos los datos directamente; ese mensaje queda sujeto también a las políticas de privacidad de WhatsApp.</p>
-              <p><strong style={{ color: T.ink }}>Términos del servicio.</strong> Los precios pueden variar por condiciones especiales del vehículo (recubrimientos previos, modificaciones, suciedad excesiva). Es responsabilidad del cliente informar estas condiciones antes de la cita.</p>
-              <p><strong style={{ color: T.ink }}>Tus derechos.</strong> Puedes pedirnos en cualquier momento que eliminemos tu información contactándonos por WhatsApp.</p>
+              <p><strong style={{ color: T.ink }}>Responsable.</strong> Punto Cero Detallado es un servicio de detallado automotriz a domicilio operado por sus socios fundadores. Al agendar una cita a través de esta página, aceptas los términos descritos a continuación.</p>
+              <p><strong style={{ color: T.ink }}>Datos que recopilamos.</strong> Al agendar una cita recopilamos tu nombre, teléfono, dirección del servicio, tipo de vehículo, marca/modelo/año y notas adicionales que nos proporciones. No solicitamos datos bancarios, de tarjetas ni información sensible a través de este formulario.</p>
+              <p><strong style={{ color: T.ink }}>Para qué los usamos.</strong> Únicamente para coordinar, confirmar y dar seguimiento a tu servicio, calcular disponibilidad real de horarios, y contactarte por WhatsApp en caso de dudas o cambios. Nunca compartimos ni vendemos tu información a terceros con fines comerciales o publicitarios.</p>
+              <p><strong style={{ color: T.ink }}>Dónde se guardan.</strong> Tus datos se almacenan de forma segura en Supabase, nuestro proveedor de base de datos, y solo el equipo de Punto Cero Detallado tiene acceso a ellos. No almacenamos esta información en dispositivos personales sin control.</p>
+              <p><strong style={{ color: T.ink }}>WhatsApp.</strong> Al confirmar una cita se abre WhatsApp para enviarnos los datos directamente; ese mensaje queda sujeto también a las políticas de privacidad de WhatsApp/Meta, ajenas a Punto Cero Detallado.</p>
+              <p><strong style={{ color: T.ink }}>Menores de edad.</strong> Este servicio está dirigido a personas mayores de edad. Si eres menor de edad, agenda con ayuda de un padre, madre o tutor.</p>
+              <p><strong style={{ color: T.ink }}>Precios y condiciones del vehículo.</strong> Los precios mostrados aplican a condiciones normales de uso. Pueden variar por suciedad excesiva, presencia de mascotas, derrames, modificaciones eléctricas o mecánicas, recubrimientos previos (cerámico, PPF, polarizado) u otras condiciones especiales. Es responsabilidad del cliente informar estas condiciones antes de la cita para recibir una cotización justa y evitar cargos adicionales el día del servicio.</p>
+              <p><strong style={{ color: T.ink }}>Requisitos del servicio.</strong> El domicilio debe contar con acceso a toma de agua y corriente eléctrica. Si el lugar no cuenta con estos servicios, contáctanos antes de agendar para evaluar alternativas.</p>
+              <p><strong style={{ color: T.ink }}>Confirmación y cancelaciones.</strong> Toda cita queda sujeta a confirmación de nuestro equipo por WhatsApp. Si necesitas cancelar o reagendar, te pedimos avisarnos con la mayor anticipación posible para poder disponer del horario.</p>
+              <p><strong style={{ color: T.ink }}>Responsabilidad sobre el vehículo.</strong> Trabajamos con productos y técnicas profesionales pensadas para no dañar tu vehículo. Si tu auto presenta daños preexistentes en pintura, plásticos o tapicería, te pedimos informarlo antes del servicio para dejarlo documentado y evitar malentendidos.</p>
+              <p><strong style={{ color: T.ink }}>Promociones.</strong> Las ofertas de lanzamiento u otras promociones vigentes en la página aplican bajo los términos y vigencia indicados en cada promoción, y pueden modificarse o darse por terminadas en cualquier momento.</p>
+              <p><strong style={{ color: T.ink }}>Cambios a este aviso.</strong> Podemos actualizar esta política conforme el servicio crezca. Los cambios se reflejarán en esta misma página con la fecha de última actualización.</p>
+              <p><strong style={{ color: T.ink }}>Tus derechos.</strong> Puedes pedirnos en cualquier momento que te compartamos, corrijamos o eliminemos tu información contactándonos por WhatsApp.</p>
+              <p><strong style={{ color: T.ink }}>Contacto.</strong> Para dudas sobre esta política o tus datos, escríbenos por WhatsApp al número visible en esta página.</p>
             </div>
           </div>
         </div>
