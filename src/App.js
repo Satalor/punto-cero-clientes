@@ -2,22 +2,85 @@ import { useState, useEffect } from "react";
 import { supabase } from "./supabaseClient";
 
 // ── DATOS ────────────────────────────────────────────────────────────────────
-const WHATSAPP = "5578944681";
-const VEHICULOS = ["Compacto / Sedán", "Camioneta / Crossover", "Van / Pickup"];
+const WHATSAPP = "5639556562";
+const VEHICULOS = ["Compacto / Sedán", "SUV / Crossover", "Van / Pickup"];
 
 const ZONAS_CDMX = ["Azcapotzalco", "Cuauhtémoc", "Benito Juárez"];
 const ZONAS_PUEBLA = ["San Andrés Cholula", "Puebla", "Angelópolis", "Lomas de Angelópolis"];
-const Zonas_EDOMEX = ["Satelite", "Lomas verdes", "Tlanepantla"]
+const ZONAS_EDOMEX = ["Satelite", "Lomas verdes", "Tlanepantla"];
 
+// tiempos[] y precios[] van en orden: [Compacto/Sedán, SUV/Crossover, Van/Pickup]
 const CATALOGO = [
-  { id: 1, nombre: "Detallado Exterior", desc: "Carrocería, llantas y vidrios exteriores con hidrolavadora.", duracion: "45 min", duracionBloque: 1.5, cat: "basico", precios: [299, 349, 399], incluye: ["Lavado con hidrolavadora", "Secado completo", "Limpieza de llantas", "Vidrios exteriores"] },
-  { id: 3, nombre: "Detallado Interior", desc: "Aspirado, tablero, puertas y vidrios interiores.", duracion: "45 min", duracionBloque: 1.5, cat: "basico", precios: [299, 349, 399], incluye: ["Aspirado de tapetes y asientos", "Limpieza de tablero", "Limpieza de puertas", "Vidrios interiores"] },
-  { id: 2, nombre: "Detallado Interior Completo", desc: "Interior + exterior. Nuestro servicio más solicitado.", duracion: "2 hrs", duracionBloque: 2.5, cat: "popular", precios: [549, 649, 749], incluye: ["Todo del lavado exterior", "Todo del lavado interior", "Brillado de llantas", "Ambientador incluido"] },
-
-  { id: 5, nombre: "Encerado y Protección", desc: "Cera protectora que cuida tu pintura hasta 3 meses.", duracion: "2-3 hrs", duracionBloque: 3.5, cat: "premium", precios: [699, 849, 999], incluye: ["Lavado previo", "Descontaminación de pintura", "Cera carnauba", "Protección 3 meses"] },
-  { id: 6, nombre: "Descontaminación", desc: "Savia, manchas de agua, excremento de aves y más.", duracion: "1.5 hrs", duracionBloque: 2.5, cat: "especial", precios: [499, 599, 699], incluye: ["Lavado previo", "Descontaminante químico", "Clay bar", "Enjuague y secado"] },
-  { id: 7, nombre: "Detallado Premium", desc: "Lo mejor de todo. Pulido + encerado + interior y exterior.", duracion: "5-6 hrs", duracionBloque: 6.5, cat: "premium", precios: [1499, 1799, 2099], incluye: ["Detallado completo", "Pulido de pintura", "Encerado y protección", "Limpieza profunda de tapicería", "Restauración de plásticos", "Ambientador premium"] },
-  { id: 8, nombre: "Limpieza de Tapicería", desc: "Lavado profundo de asientos, tapetes y techo interior.", duracion: "2-3 hrs", duracionBloque: 3.5, cat: "especial", precios: [599, 749, 899], incluye: ["Aspirado profundo", "Extracción de manchas", "Limpieza con espuma", "Secado y acondicionado"] },
+  {
+    id: 1, nombre: "Detallado Exterior", cat: "exterior",
+    desc: "Recupera el brillo y la limpieza del exterior de tu vehículo con un lavado seguro y detallado.",
+    precios: [299, 399, 499],
+    tiempoLabel: ["2:30", "2:45", "3:00"],
+    tiempoHoras: [2.5, 2.75, 3.0],
+    incluye: ["Prelavado y lavado con shampoo pH neutro", "Limpieza detallada de emblemas, rejillas y zonas de difícil acceso", "Limpieza profunda de rines", "Descontaminación férrica de pintura y rines", "Secado seguro con microfibra", "Aplicación de cera de mantenimiento", "Aspirado básico del interior"],
+    noIncluye: null,
+    nota: "Si tu vehículo cuenta con un recubrimiento cerámico o alguna protección aplicada, háznoslo saber antes del servicio.",
+  },
+  {
+    id: 2, nombre: "Protección Cerámica con Cera de Grafeno", cat: "exterior",
+    desc: "Mayor brillo, mayor protección y una pintura más suave al tacto.",
+    precios: [749, 799, 849],
+    tiempoLabel: ["4:30–5:00", "5:00–5:30", "5:30–6:00"],
+    tiempoHoras: [5.0, 5.5, 6.0],
+    incluye: ["Todo lo incluido en el Detallado Exterior (excepto cera de mantenimiento, sustituida por protección cerámica)", "Descontaminación mecánica de la pintura", "Preparación de la superficie", "Aplicación de cera cerámica con grafeno", "Protección hidrofóbica de hasta 5 meses*"],
+    noIncluye: null,
+    nota: "*La duración de la protección puede variar según el uso y mantenimiento del vehículo.",
+  },
+  {
+    id: 3, nombre: "Detallado Interior", cat: "interior",
+    desc: "Recupera la limpieza y el aspecto original del interior de tu vehículo.",
+    precios: [349, 399, 449],
+    tiempoLabel: ["2:30", "2:50", "3:15"],
+    tiempoHoras: [2.5, 2.8333, 3.25],
+    incluye: ["Aspirado completo", "Limpieza profunda de plásticos, viniles y superficies de contacto con APC", "Limpieza de cristales interiores", "Protector para plásticos", "Acondicionador para piel (cuando aplique)", "Fragancia para interior"],
+    noIncluye: "Asientos, alfombra, cielo, cinturones ni sanitización con vapor.",
+    nota: null,
+  },
+  {
+    id: 4, nombre: "Detallado Interior Completo", cat: "interior",
+    desc: "La experiencia más completa para renovar el interior de tu vehículo.",
+    precios: [1499, 1799, 1999],
+    tiempoLabel: ["6:00", "6:45", "7:30"],
+    tiempoHoras: [6.0, 6.75, 7.5],
+    incluye: ["Todo lo incluido en el Detallado Interior", "Lavado profundo de tapetes, alfombra y asientos textiles mediante inyección-extracción", "Limpieza y acondicionamiento de asientos de piel (cuando aplique)", "Limpieza de cinturones de seguridad", "Limpieza segura del cielo del vehículo", "Pretratamiento de manchas visibles", "Fragancia para interior"],
+    noIncluye: "Sanitización con vapor.",
+    nota: null,
+  },
+  {
+    id: 5, nombre: "Sanitización con Vapor", cat: "interior",
+    desc: "Mejora la higiene del habitáculo y ayuda a eliminar olores.",
+    precios: [499, 549, 599],
+    tiempoLabel: ["2:20", "2:40", "3:05"],
+    tiempoHoras: [2.3333, 2.6667, 3.0833],
+    incluye: ["Aspirado completo", "Limpieza superficial de superficies de contacto", "Sanitización con vapor en las principales áreas del habitáculo", "Tratamiento del sistema de aire acondicionado", "Protector para plásticos", "Acondicionador para piel (cuando aplique)", "Fragancia para interior"],
+    noIncluye: null,
+    nota: "Puede contratarse como servicio independiente o como complemento de cualquier servicio de interior.",
+  },
+  {
+    id: 6, nombre: "Detallado de Motor", cat: "especializado",
+    desc: "Limpieza segura del compartimento del motor para mejorar su apariencia y facilitar su mantenimiento.",
+    precios: [499, 549, 599],
+    tiempoLabel: ["1:30", "1:45", "2:00"],
+    tiempoHoras: [1.5, 1.75, 2.0],
+    incluye: ["Protección de componentes sensibles", "Eliminación de grasa, polvo y suciedad", "Limpieza detallada del compartimento del motor", "Secado con aire y microfibra", "Protector para plásticos y hules"],
+    noIncluye: null,
+    nota: "Si el motor presenta modificaciones eléctricas, cables expuestos o reparaciones recientes, infórmanos antes del servicio.",
+  },
+  {
+    id: 7, nombre: "Detallado de Rines, Llantas y Tolvas", cat: "especializado",
+    desc: "Limpieza profunda de las zonas que un lavado convencional no alcanza.",
+    precios: [699, 749, 779],
+    tiempoLabel: ["4:00", "4:30", "5:00"],
+    tiempoHoras: [4.0, 4.5, 5.0],
+    incluye: ["Retiro de las cuatro ruedas", "Limpieza profunda de rines", "Limpieza de llantas, tolvas y guardafangos", "Descontaminación férrica", "Protector para plásticos y llantas", "Reinstalación con torque adecuado"],
+    noIncluye: null,
+    nota: "Si tu vehículo utiliza birlos de seguridad, recuerda tener disponible la llave correspondiente.",
+  },
 ];
 
 const horaAMinutos = (hhmm) => { const [h, m] = hhmm.split(":").map(Number); return h * 60 + (m || 0); };
@@ -32,10 +95,9 @@ const T = {
 };
 
 const CAT_STYLE = {
-  basico: { color: T.inkSoft, bg: "#6B6E7412", label: "Básico" },
-  popular: { color: T.brass, bg: T.brassSoft, label: "Popular" },
-  premium: { color: T.marine, bg: T.marineSoft, label: "Premium" },
-  especial: { color: T.teal, bg: T.tealSoft, label: "Especial" },
+  exterior: { color: T.marine, bg: T.marineSoft, label: "Exterior" },
+  interior: { color: T.teal, bg: T.tealSoft, label: "Interior" },
+  especializado: { color: T.brass, bg: T.brassSoft, label: "Especializado" },
 };
 
 const ANTES_DESPUES = [];
@@ -44,6 +106,7 @@ const MARCAS = [
   { nombre: "Black+Decker", desc: "Hidrolavadora", color: "#1C3A56", logo: "/black-decker.png" },
   { nombre: "Karcher", desc: "Lava-aspiradora", color: "#9C7A3C", logo: "/karcher.png" },
   { nombre: "Koblenz", desc: "Aspiradora", color: "#3F6357", logo: "/koblenz.png" },
+  { nombre: "Infinity Shine", desc: "Productos y recubrimientos", color: "#3A5BFF", logo: "/infinity-shine.png" },
 ];
 
 const PROMO_VIDEO_URL = "/promo.mp4";
@@ -70,13 +133,12 @@ export default function ClienteApp() {
   useFonts();
   const [tab, setTab] = useState("inicio");
   const [showPrivacidad, setShowPrivacidad] = useState(false);
-  const [aceptoPrivacidad, setAceptoPrivacidad] = useState(false);
-  const aceptarPrivacidad = () => setAceptoPrivacidad(true);
+  const [showAvisoBanner, setShowAvisoBanner] = useState(true);
   const [vehiculo, setVehiculo] = useState(0);
   const [expandido, setExpandido] = useState(null);
   const [filtro, setFiltro] = useState("todos");
 
-  const [agenda, setAgenda] = useState({ nombre: "", telefono: "", ciudad: "", zona: "", direccion: "", servicio: "", vehiculo: VEHICULOS[0], fecha: "", hora: "", notas: "" });
+  const [agenda, setAgenda] = useState({ nombre: "", telefono: "", ciudad: "", zona: "", direccion: "", servicio: "", vehiculo: VEHICULOS[0], marca_modelo: "", fecha: "", hora: "", notas: "" });
   const [agendaStep, setAgendaStep] = useState(1);
   const [agendaError, setAgendaError] = useState("");
   const [enviando, setEnviando] = useState(false);
@@ -97,11 +159,18 @@ export default function ClienteApp() {
 
   useEffect(() => {
     if (!agenda.fecha || !agenda.servicio) { setHorasDisponibles([]); return; }
-    calcularHorasDisponibles(agenda.fecha, agenda.servicio);
+    calcularHorasDisponibles(agenda.fecha, agenda.servicio, agenda.vehiculo);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [agenda.fecha, agenda.servicio, horarios]);
+  }, [agenda.fecha, agenda.servicio, agenda.vehiculo, horarios]);
 
-  const calcularHorasDisponibles = async (fechaStr, nombreServicio) => {
+  const duracionHorasDe = (nombreServicio, vehiculoLabel) => {
+    const s = CATALOGO.find(x => x.nombre === nombreServicio);
+    if (!s) return 2;
+    const idxVeh = Math.max(0, VEHICULOS.indexOf(vehiculoLabel));
+    return s.tiempoHoras[idxVeh] ?? s.tiempoHoras[0];
+  };
+
+  const calcularHorasDisponibles = async (fechaStr, nombreServicio, vehiculoLabel) => {
     setCargandoHoras(true);
     const fecha = new Date(fechaStr + "T00:00:00");
     const diaSemana = fecha.getDay();
@@ -113,8 +182,7 @@ export default function ClienteApp() {
       return;
     }
 
-    const servicioElegido = CATALOGO.find(s => s.nombre === nombreServicio);
-    const duracionNueva = servicioElegido ? servicioElegido.duracionBloque : 2;
+    const duracionNueva = duracionHorasDe(nombreServicio, vehiculoLabel);
 
     const inicioMin = horaAMinutos(config.hora_inicio);
     const finMin = horaAMinutos(config.hora_fin);
@@ -130,13 +198,12 @@ export default function ClienteApp() {
 
     const { data: citasExistentes } = await supabase
       .from("citas")
-      .select("hora, servicio, estado")
+      .select("hora, servicio, vehiculo, estado")
       .eq("fecha", fechaStr)
       .neq("estado", "cancelada");
 
     const rangosOcupados = (citasExistentes || []).map(c => {
-      const s = CATALOGO.find(x => x.nombre === c.servicio);
-      const dur = s ? s.duracionBloque : 2;
+      const dur = duracionHorasDe(c.servicio, c.vehiculo);
       const ini = horaAMinutos(c.hora);
       return { ini, fin: ini + dur * 60 };
     });
@@ -155,7 +222,7 @@ export default function ClienteApp() {
     setCargandoHoras(false);
   };
 
-  const abrirWhatsApp = (msg) => { window.location.href = `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msg)}`; };
+  const abrirWhatsApp = (msg) => { window.location.href = `https://wa.me/52${WHATSAPP}?text=${encodeURIComponent(msg)}`; };
 
   const cotizarWhatsApp = (s) => {
     const msg = `Hola! Me interesa el servicio de *${s.nombre}* para mi ${VEHICULOS[vehiculo]}.\nPrecio: ${fmt(s.precios[vehiculo])}\n¿Tienen disponibilidad?`;
@@ -163,27 +230,25 @@ export default function ClienteApp() {
   };
 
   const confirmarCita = async () => {
-    if (!agenda.nombre || !agenda.telefono || !agenda.servicio || !agenda.fecha || !agenda.hora || !agenda.direccion || !agenda.ciudad || !agenda.zona) {
-      setAgendaError("Por favor llena todos los campos obligatorios, incluyendo ciudad y zona.");
+    if (!agenda.nombre || !agenda.telefono || !agenda.servicio || !agenda.fecha || !agenda.hora || !agenda.direccion || !agenda.ciudad || !agenda.zona || !agenda.marca_modelo) {
+      setAgendaError("Por favor llena todos los campos obligatorios, incluyendo ciudad, zona y marca/modelo/año.");
       return;
     }
     setAgendaError("");
     setEnviando(true);
 
-    const servicioElegido = CATALOGO.find(s => s.nombre === agenda.servicio);
-    const duracionNueva = servicioElegido ? servicioElegido.duracionBloque : 2;
+    const duracionNueva = duracionHorasDe(agenda.servicio, agenda.vehiculo);
     const inicioNuevoMin = horaAMinutos(agenda.hora);
     const finNuevoMin = inicioNuevoMin + duracionNueva * 60;
 
     const { data: citasDelDia } = await supabase
       .from("citas")
-      .select("id, hora, servicio")
+      .select("id, hora, servicio, vehiculo")
       .eq("fecha", agenda.fecha)
       .neq("estado", "cancelada");
 
     const hayChoque = (citasDelDia || []).some(c => {
-      const s = CATALOGO.find(x => x.nombre === c.servicio);
-      const dur = s ? s.duracionBloque : 2;
+      const dur = duracionHorasDe(c.servicio, c.vehiculo);
       const ini = horaAMinutos(c.hora);
       const fin = ini + dur * 60;
       return inicioNuevoMin < fin && finNuevoMin > ini;
@@ -192,7 +257,7 @@ export default function ClienteApp() {
     if (hayChoque) {
       setAgendaError("Justo se ocupó ese horario. Por favor elige otra hora disponible.");
       setEnviando(false);
-      calcularHorasDisponibles(agenda.fecha, agenda.servicio);
+      calcularHorasDisponibles(agenda.fecha, agenda.servicio, agenda.vehiculo);
       return;
     }
 
@@ -204,6 +269,7 @@ export default function ClienteApp() {
       direccion: agenda.direccion,
       servicio: agenda.servicio,
       vehiculo: agenda.vehiculo,
+      marca_modelo: agenda.marca_modelo,
       fecha: agenda.fecha,
       hora: agenda.hora,
       notas: agenda.notas || null,
@@ -237,6 +303,8 @@ export default function ClienteApp() {
     { id: "agendar", label: "Agendar" },
   ];
 
+  const zonasDe = (ciudad) => ciudad === "CDMX" ? ZONAS_CDMX : ciudad === "Edomex" ? ZONAS_EDOMEX : ciudad === "Puebla" ? ZONAS_PUEBLA : [];
+
   return (
     <div style={{ fontFamily: "'Inter', sans-serif", minHeight: "100vh", background: T.paper, paddingBottom: 88, color: T.ink }}>
       <style>{`
@@ -251,7 +319,7 @@ export default function ClienteApp() {
         <div style={{ maxWidth: 600, margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
           <div>
             <div style={{ ...serif, fontWeight: 600, fontSize: 21, letterSpacing: 0.2, lineHeight: 1 }}>Punto Cero</div>
-            <div style={{ ...mono, fontSize: 10, color: T.inkFaint, letterSpacing: 2, marginTop: 5, textTransform: "uppercase" }}>Detallado · CDMX &amp; Puebla</div>
+            <div style={{ ...mono, fontSize: 10, color: T.inkFaint, letterSpacing: 2, marginTop: 5, textTransform: "uppercase" }}>Detallado · CDMX, Edomex &amp; Puebla</div>
           </div>
           <button onClick={() => abrirWhatsApp("Hola! Me gustaría más información sobre sus servicios.")} style={{ background: "none", border: "none", borderBottom: `1px solid ${T.ink}`, color: T.ink, padding: "0 0 2px", fontWeight: 500, cursor: "pointer", fontSize: 13, fontFamily: "'Inter', sans-serif" }}>
             WhatsApp ↗
@@ -265,7 +333,7 @@ export default function ClienteApp() {
         {tab === "inicio" && (
           <div>
             <div style={{ marginBottom: 44 }}>
-              <span style={eyebrow}>A domicilio · CDMX &amp; Puebla</span>
+              <span style={eyebrow}>A domicilio · CDMX, Edomex &amp; Puebla</span>
               <div style={{ ...serif, fontWeight: 600, fontSize: 40, lineHeight: 1.08, letterSpacing: -0.5, marginBottom: 18 }}>
                 Tu auto,<br />de vuelta a punto cero<span style={{ color: T.brass }}>.</span>
               </div>
@@ -315,7 +383,7 @@ export default function ClienteApp() {
             </div>
 
             <span style={eyebrow}>Más solicitados</span>
-            {CATALOGO.filter(s => s.cat === "popular" || s.id === 1).map(s => (
+            {CATALOGO.filter(s => s.id === 1 || s.id === 4).map(s => (
               <div key={s.id} onClick={() => { setTab("servicios"); setExpandido(s.id); }} style={{ background: T.surface, border: `1px solid ${T.line}`, padding: "18px 20px", marginBottom: 10, cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <div>
                   <div style={{ fontWeight: 600, fontSize: 15 }}>{s.nombre}</div>
@@ -327,7 +395,7 @@ export default function ClienteApp() {
 
             <div style={{ height: 1, background: T.line, margin: "36px 0" }} />
 
-            <span style={eyebrow}>Conoce nuestras marcas</span>
+            <span style={eyebrow}>Conoce las marcas con las que trabajamos</span>
             <div style={{ overflow: "hidden", marginLeft: -20, marginRight: -20, maskImage: "linear-gradient(90deg, transparent, black 8%, black 92%, transparent)" }}>
               <div className="pc-marquee" style={{ display: "flex", gap: 12, width: "max-content", paddingLeft: 20 }}>
                 {[...MARCAS, ...MARCAS].map((m, i) => (
@@ -350,7 +418,7 @@ export default function ClienteApp() {
                 Dos socios, una obsesión por dejar cada auto impecable.
               </div>
               <div style={{ color: T.inkSoft, fontSize: 14, lineHeight: 1.7, maxWidth: 460 }}>
-                Punto Cero Detallado nació en CDMX y Puebla con una idea simple: llevar un detallado de nivel profesional hasta la puerta de tu casa u oficina, con el mismo cuidado que le daríamos a nuestro propio auto.
+                Punto Cero Detallado nació en CDMX, Edomex y Puebla con una idea simple: llevar un detallado de nivel profesional hasta la puerta de tu casa u oficina, con el mismo cuidado que le daríamos a nuestro propio auto.
               </div>
             </div>
 
@@ -405,7 +473,7 @@ export default function ClienteApp() {
             </div>
 
             <div style={{ textAlign: "center", marginTop: 40 }}>
-              <button onClick={() => setShowPrivacidad(true)} style={{ background: "none", border: "none", color: T.inkFaint, fontSize: 11.5, cursor: "pointer", textDecoration: "underline", fontFamily: "'Inter', sans-serif" }}>Política de privacidad</button>
+              <button onClick={() => setShowPrivacidad(true)} style={{ background: "none", border: "none", color: T.inkFaint, fontSize: 11.5, cursor: "pointer", textDecoration: "underline", fontFamily: "'Inter', sans-serif" }}>Política de privacidad y términos</button>
             </div>
           </div>
         )}
@@ -413,7 +481,7 @@ export default function ClienteApp() {
         {/* ── SERVICIOS ── */}
         {tab === "servicios" && (
           <div>
-            <div style={{ marginBottom: 28 }}>
+            <div style={{ marginBottom: 10 }}>
               <span style={eyebrow}>Tipo de vehículo</span>
               <div style={{ display: "flex", gap: 22, borderBottom: `1px solid ${T.line}` }}>
                 {VEHICULOS.map((v, i) => (
@@ -421,9 +489,12 @@ export default function ClienteApp() {
                 ))}
               </div>
             </div>
+            <div style={{ color: T.inkFaint, fontSize: 11.5, lineHeight: 1.6, fontStyle: "italic", marginBottom: 28 }}>
+              SUV de 3 filas o de tamaño extra grande (ej. Suburban, Tahoe, Escalade, Navigator) se cotiza en Van/Pickup por el volumen adicional de interior.
+            </div>
 
             <div style={{ display: "flex", gap: 18, flexWrap: "wrap", marginBottom: 30, fontSize: 13 }}>
-              {[["todos", "Todos"], ["basico", "Básicos"], ["popular", "Populares"], ["premium", "Premium"], ["especial", "Especiales"]].map(([k, l]) => (
+              {[["todos", "Todos"], ["exterior", "Exterior"], ["interior", "Interior"], ["especializado", "Especializados"]].map(([k, l]) => (
                 <button key={k} onClick={() => setFiltro(k)} style={{ background: "none", border: "none", padding: 0, cursor: "pointer", fontFamily: "'Inter', sans-serif", color: filtro === k ? T.ink : T.inkFaint, fontWeight: filtro === k ? 600 : 400, textDecoration: filtro === k ? "underline" : "none", textUnderlineOffset: 4 }}>{l}</button>
               ))}
             </div>
@@ -435,7 +506,7 @@ export default function ClienteApp() {
                 <div key={s.id} style={{ background: T.surface, border: `1px solid ${T.line}`, marginBottom: 12 }}>
                   <div onClick={() => setExpandido(open ? null : s.id)} style={{ padding: "20px 20px", cursor: "pointer", display: "flex", justifyContent: "space-between", gap: 16 }}>
                     <div style={{ flex: 1 }}>
-                      <span style={{ ...mono, fontSize: 10, fontWeight: 500, letterSpacing: 1, textTransform: "uppercase", color: cs.color }}>{cs.label} · {s.duracion}</span>
+                      <span style={{ ...mono, fontSize: 10, fontWeight: 500, letterSpacing: 1, textTransform: "uppercase", color: cs.color }}>{cs.label} · {s.tiempoLabel[vehiculo]}</span>
                       <div style={{ ...serif, fontWeight: 600, fontSize: 18, marginTop: 6, marginBottom: 6 }}>{s.nombre}</div>
                       <div style={{ color: T.inkSoft, fontSize: 13.5, lineHeight: 1.5 }}>{s.desc}</div>
                       <div style={{ color: T.inkFaint, fontSize: 11, marginTop: 10, ...mono }}>{open ? "− cerrar" : "+ ver detalle"}</div>
@@ -452,6 +523,16 @@ export default function ClienteApp() {
                           <span style={{ color: T.brass }}>–</span>{item}
                         </div>
                       ))}
+                      {s.noIncluye && (
+                        <div style={{ color: T.inkFaint, fontSize: 12, marginTop: 8, marginBottom: 6 }}>
+                          <strong>No incluye:</strong> {s.noIncluye}
+                        </div>
+                      )}
+                      {s.nota && (
+                        <div style={{ color: T.inkFaint, fontSize: 12, lineHeight: 1.6, marginTop: 14, borderLeft: `2px solid ${T.brass}`, paddingLeft: 10, fontStyle: "italic" }}>
+                          {s.nota}
+                        </div>
+                      )}
                       <div style={{ display: "flex", gap: 10, marginTop: 20, flexWrap: "wrap" }}>
                         <button onClick={() => { setAgenda(a => ({ ...a, servicio: s.nombre, vehiculo: VEHICULOS[vehiculo] })); setTab("agendar"); }} style={btnPrimary}>Agendar</button>
                         <button onClick={() => cotizarWhatsApp(s)} style={btnWhats}>WhatsApp</button>
@@ -464,7 +545,7 @@ export default function ClienteApp() {
 
             <div style={{ borderTop: `1px solid ${T.line}`, paddingTop: 18, marginTop: 20 }}>
               <div style={{ color: T.inkFaint, fontSize: 12, lineHeight: 1.7 }}>
-                Servicio a domicilio sin costo adicional dentro de la zona de cobertura. Se requiere acceso a toma de agua y corriente eléctrica. Los precios pueden variar según el estado del vehículo y suciedad excesiva — cualquier duda, contáctanos por WhatsApp.
+                Servicio a domicilio sin costo adicional dentro de la zona de cobertura. Se requiere acceso a toma de agua y corriente eléctrica. Los precios pueden variar según el estado del vehículo y suciedad excesiva — más detalles en nuestra <button onClick={() => setShowPrivacidad(true)} style={{ background: "none", border: "none", padding: 0, color: T.brass, textDecoration: "underline", cursor: "pointer", font: "inherit" }}>política de privacidad y términos</button>.
               </div>
             </div>
           </div>
@@ -494,6 +575,7 @@ export default function ClienteApp() {
                   <select value={agenda.ciudad} onChange={e => setAgenda(a => ({ ...a, ciudad: e.target.value, zona: "" }))} style={inp}>
                     <option value="">Selecciona una ciudad...</option>
                     <option value="CDMX">CDMX</option>
+                    <option value="Edomex">Edomex</option>
                     <option value="Puebla">Puebla</option>
                   </select>
                 </div>
@@ -503,7 +585,7 @@ export default function ClienteApp() {
                     <label style={lbl}>Zona de cobertura *</label>
                     <select value={agenda.zona} onChange={e => setAgenda(a => ({ ...a, zona: e.target.value }))} style={inp}>
                       <option value="">Selecciona tu zona...</option>
-                      {(agenda.ciudad === "CDMX" ? ZONAS_CDMX : ZONAS_PUEBLA).map(z => (
+                      {zonasDe(agenda.ciudad).map(z => (
                         <option key={z} value={z}>{z}</option>
                       ))}
                     </select>
@@ -524,15 +606,21 @@ export default function ClienteApp() {
                   <label style={lbl}>Servicio que deseas *</label>
                   <select value={agenda.servicio} onChange={e => setAgenda(a => ({ ...a, servicio: e.target.value, hora: "" }))} style={inp}>
                     <option value="">Selecciona un servicio...</option>
-                    {CATALOGO.map(s => <option key={s.id} value={s.nombre}>{s.nombre} ({s.duracion})</option>)}
+                    {CATALOGO.map(s => <option key={s.id} value={s.nombre}>{s.nombre}</option>)}
                   </select>
                 </div>
 
                 <div style={{ marginBottom: 22 }}>
                   <label style={lbl}>Tipo de vehículo *</label>
-                  <select value={agenda.vehiculo} onChange={e => setAgenda(a => ({ ...a, vehiculo: e.target.value }))} style={inp}>
+                  <select value={agenda.vehiculo} onChange={e => setAgenda(a => ({ ...a, vehiculo: e.target.value, hora: "" }))} style={inp}>
                     {VEHICULOS.map(v => <option key={v} value={v}>{v}</option>)}
                   </select>
+                </div>
+
+                <div style={{ marginBottom: 22 }}>
+                  <label style={lbl}>Marca, Modelo y Año *</label>
+                  <input type="text" placeholder="Ej. Nissan Versa 2021" value={agenda.marca_modelo} onChange={e => setAgenda(a => ({ ...a, marca_modelo: e.target.value }))} style={inp} />
+                  <div style={{ color: T.inkFaint, fontSize: 11, marginTop: 8 }}>Nos ayuda a llegar preparados con el vehículo correcto en mente.</div>
                 </div>
 
                 <div style={{ marginBottom: 22 }}>
@@ -544,7 +632,7 @@ export default function ClienteApp() {
                 {agenda.fecha && agenda.servicio && (
                   <div style={{ marginBottom: 22 }}>
                     <label style={lbl}>Hora disponible *</label>
-                    <div style={{ color: T.inkFaint, fontSize: 11.5, marginBottom: 12 }}>Este servicio dura aprox. {CATALOGO.find(s => s.nombre === agenda.servicio)?.duracion} — el sistema ya considera tiempo de traslado entre citas.</div>
+                    <div style={{ color: T.inkFaint, fontSize: 11.5, marginBottom: 12 }}>Este servicio dura aprox. {CATALOGO.find(s => s.nombre === agenda.servicio)?.tiempoLabel[VEHICULOS.indexOf(agenda.vehiculo)]} — el sistema ya considera tiempo de traslado entre citas.</div>
                     {cargandoHoras ? (
                       <div style={{ color: T.inkSoft, fontSize: 13, padding: "10px 0" }}>Consultando disponibilidad...</div>
                     ) : horasDisponibles.length === 0 ? (
@@ -580,7 +668,7 @@ export default function ClienteApp() {
                 <div style={{ width: 56, height: 56, borderRadius: "50%", border: `1px solid ${T.brass}`, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 24px", ...mono, fontSize: 22, color: T.brass }}>✓</div>
                 <div style={{ ...serif, fontWeight: 600, fontSize: 24, marginBottom: 12 }}>Cita registrada</div>
                 <div style={{ color: T.inkSoft, fontSize: 14, lineHeight: 1.7, marginBottom: 32, maxWidth: 360, margin: "0 auto 32px" }}>Tu cita está pendiente de confirmación. Te contactaremos por WhatsApp. Gracias por elegirnos.</div>
-                <button onClick={() => { setAgendaStep(1); setAgenda({ nombre: "", telefono: "", ciudad: "", zona: "", direccion: "", servicio: "", vehiculo: VEHICULOS[0], fecha: "", hora: "", notas: "" }); }} style={btnGhost}>
+                <button onClick={() => { setAgendaStep(1); setAgenda({ nombre: "", telefono: "", ciudad: "", zona: "", direccion: "", servicio: "", vehiculo: VEHICULOS[0], marca_modelo: "", fecha: "", hora: "", notas: "" }); }} style={btnGhost}>
                   Agendar otra cita
                 </button>
               </div>
@@ -589,36 +677,37 @@ export default function ClienteApp() {
         )}
       </div>
 
-      {/* GATE DE PRIVACIDAD */}
-      {!aceptoPrivacidad && (
-        <div style={{ position: "fixed", inset: 0, background: T.paper, zIndex: 200, display: "flex", alignItems: "flex-end" }}>
-          <div style={{ width: "100%", maxHeight: "88vh", overflowY: "auto", padding: "28px 22px 24px", borderTop: `1px solid ${T.line}` }}>
-            <div style={{ ...serif, fontWeight: 600, fontSize: 20, marginBottom: 20 }}>Política de privacidad</div>
-            <div style={{ color: T.inkSoft, fontSize: 13.5, lineHeight: 1.8, marginBottom: 24 }}>
-              <p><strong style={{ color: T.ink }}>Datos que recopilamos.</strong> Al agendar una cita recopilamos tu nombre, teléfono, dirección del servicio, tipo de vehículo y notas adicionales que nos proporciones.</p>
-              <p><strong style={{ color: T.ink }}>Para qué los usamos.</strong> Únicamente para coordinar, confirmar y dar seguimiento a tu servicio. Nunca compartimos ni vendemos tu información a terceros.</p>
-              <p><strong style={{ color: T.ink }}>Dónde se guardan.</strong> Tus datos se almacenan de forma segura en nuestra base de datos y solo el equipo de Punto Cero Detallado tiene acceso a ellos.</p>
-              <p><strong style={{ color: T.ink }}>WhatsApp.</strong> Al confirmar una cita se abre WhatsApp para enviarnos los datos directamente; ese mensaje queda sujeto también a las políticas de privacidad de WhatsApp.</p>
-              <p><strong style={{ color: T.ink }}>Tus derechos.</strong> Puedes pedirnos en cualquier momento que eliminemos tu información contactándonos por WhatsApp.</p>
+      {/* AVISO DE PRIVACIDAD — banner no invasivo, estilo Nissan */}
+      {showAvisoBanner && (
+        <div style={{ position: "fixed", left: 0, right: 0, bottom: 0, zIndex: 90, display: "flex", justifyContent: "center", pointerEvents: "none" }}>
+          <div style={{ pointerEvents: "all", maxWidth: 600, width: "100%", background: T.marine, color: "#DCE3EA", padding: "16px 20px 18px", borderRadius: "16px 16px 0 0", boxShadow: "0 -8px 30px rgba(0,0,0,.25)", boxSizing: "border-box" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 10, marginBottom: 8 }}>
+              <span style={{ ...mono, fontSize: 11, letterSpacing: 2, textTransform: "uppercase", color: T.brass }}>Aviso importante</span>
+              <button onClick={() => setShowAvisoBanner(false)} style={{ ...mono, background: "none", border: "none", color: "#9FB0C0", fontSize: 12, cursor: "pointer" }}>CERRAR ✕</button>
             </div>
-            <button onClick={aceptarPrivacidad} style={{ ...btnPrimary, width: "100%" }}>Acepto la política de privacidad</button>
+            <div style={{ fontSize: 12.5, lineHeight: 1.6, color: "#C5CFD8", marginBottom: 14 }}>
+              Al agendar recopilamos tus datos de contacto y cita únicamente para coordinar tu servicio. Nunca los compartimos con terceros. Conoce el detalle completo en nuestra{" "}
+              <button onClick={() => setShowPrivacidad(true)} style={{ background: "none", border: "none", padding: 0, color: T.brass, textDecoration: "underline", cursor: "pointer", font: "inherit" }}>política de privacidad y términos</button>.
+            </div>
+            <button onClick={() => setShowAvisoBanner(false)} style={{ width: "100%", background: T.brass, color: "#fff", border: "none", borderRadius: 10, padding: 12, fontWeight: 600, fontSize: 13, cursor: "pointer", fontFamily: "'Inter', sans-serif" }}>Entendido</button>
           </div>
         </div>
       )}
 
-      {/* MODAL PRIVACIDAD */}
+      {/* MODAL PRIVACIDAD Y TÉRMINOS */}
       {showPrivacidad && (
         <div onClick={() => setShowPrivacidad(false)} style={{ position: "fixed", inset: 0, background: "rgba(22,24,28,0.6)", zIndex: 100, display: "flex", alignItems: "flex-end" }}>
-          <div onClick={e => e.stopPropagation()} style={{ background: T.paper, width: "100%", maxHeight: "82vh", overflowY: "auto", padding: "28px 22px 40px", borderTop: `1px solid ${T.line}` }}>
+          <div onClick={e => e.stopPropagation()} style={{ background: T.paper, width: "100%", maxWidth: 600, margin: "0 auto", maxHeight: "82vh", overflowY: "auto", padding: "28px 22px 40px", borderTop: `1px solid ${T.line}` }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
-              <div style={{ ...serif, fontWeight: 600, fontSize: 20 }}>Política de privacidad</div>
+              <div style={{ ...serif, fontWeight: 600, fontSize: 20 }}>Política de privacidad y términos</div>
               <button onClick={() => setShowPrivacidad(false)} style={{ background: "none", border: "none", color: T.inkFaint, fontSize: 22, cursor: "pointer" }}>×</button>
             </div>
             <div style={{ color: T.inkSoft, fontSize: 13.5, lineHeight: 1.8 }}>
-              <p><strong style={{ color: T.ink }}>Datos que recopilamos.</strong> Al agendar una cita recopilamos tu nombre, teléfono, dirección del servicio, tipo de vehículo y notas adicionales que nos proporciones.</p>
+              <p><strong style={{ color: T.ink }}>Datos que recopilamos.</strong> Al agendar una cita recopilamos tu nombre, teléfono, dirección del servicio, tipo de vehículo, marca/modelo/año y notas adicionales que nos proporciones.</p>
               <p><strong style={{ color: T.ink }}>Para qué los usamos.</strong> Únicamente para coordinar, confirmar y dar seguimiento a tu servicio. Nunca compartimos ni vendemos tu información a terceros.</p>
               <p><strong style={{ color: T.ink }}>Dónde se guardan.</strong> Tus datos se almacenan de forma segura en nuestra base de datos y solo el equipo de Punto Cero Detallado tiene acceso a ellos.</p>
               <p><strong style={{ color: T.ink }}>WhatsApp.</strong> Al confirmar una cita se abre WhatsApp para enviarnos los datos directamente; ese mensaje queda sujeto también a las políticas de privacidad de WhatsApp.</p>
+              <p><strong style={{ color: T.ink }}>Términos del servicio.</strong> Los precios pueden variar por condiciones especiales del vehículo (recubrimientos previos, modificaciones, suciedad excesiva). Es responsabilidad del cliente informar estas condiciones antes de la cita.</p>
               <p><strong style={{ color: T.ink }}>Tus derechos.</strong> Puedes pedirnos en cualquier momento que eliminemos tu información contactándonos por WhatsApp.</p>
             </div>
           </div>
