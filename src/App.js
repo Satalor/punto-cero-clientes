@@ -14,7 +14,7 @@ const CATALOGO = [
   {
     id: 1, nombre: "Detallado Exterior", cat: "exterior",
     desc: "Recupera el brillo y la limpieza del exterior de tu vehículo con un lavado seguro y detallado.",
-    precios: [299, 399, 499],
+    precios: [349, 449, 549],
     tiempoLabel: ["2:30", "2:45", "3:00"],
     tiempoHoras: [2.5, 2.75, 3.0],
     incluye: ["Prelavado y lavado con shampoo pH neutro", "Limpieza detallada de emblemas, rejillas y zonas de difícil acceso", "Limpieza profunda de rines", "Descontaminación férrica de pintura y rines", "Secado seguro con microfibra", "Aplicación de cera de mantenimiento", "Aspirado básico del interior"],
@@ -34,7 +34,7 @@ const CATALOGO = [
   {
     id: 3, nombre: "Detallado Interior", cat: "interior",
     desc: "Recupera la limpieza y el aspecto original del interior de tu vehículo.",
-    precios: [349, 399, 449],
+    precios: [449, 530, 599],
     tiempoLabel: ["2:30", "2:50", "3:15"],
     tiempoHoras: [2.5, 2.8333, 3.25],
     incluye: ["Aspirado completo", "Limpieza profunda de plásticos, viniles y superficies de contacto con APC", "Limpieza de cristales interiores", "Protector para plásticos", "Acondicionador para piel (cuando aplique)", "Fragancia para interior"],
@@ -44,7 +44,7 @@ const CATALOGO = [
   {
     id: 4, nombre: "Detallado Interior Completo", cat: "interior",
     desc: "La experiencia más completa para renovar el interior de tu vehículo.",
-    precios: [1499, 1799, 1999],
+    precios: [1699, 1999, 2299],
     tiempoLabel: ["6:00", "6:45", "7:30"],
     tiempoHoras: [6.0, 6.75, 7.5],
     incluye: ["Todo lo incluido en el Detallado Interior", "Lavado profundo de tapetes, alfombra y asientos textiles mediante inyección-extracción", "Limpieza y acondicionamiento de asientos de piel (cuando aplique)", "Limpieza de cinturones de seguridad", "Limpieza segura del cielo del vehículo", "Pretratamiento de manchas visibles", "Fragancia para interior"],
@@ -54,7 +54,7 @@ const CATALOGO = [
   {
     id: 5, nombre: "Sanitización con Vapor", cat: "interior",
     desc: "Mejora la higiene del habitáculo y ayuda a eliminar olores.",
-    precios: [499, 549, 599],
+    precios: [599, 649, 699],
     tiempoLabel: ["2:20", "2:40", "3:05"],
     tiempoHoras: [2.3333, 2.6667, 3.0833],
     incluye: ["Aspirado completo", "Limpieza superficial de superficies de contacto", "Sanitización con vapor en las principales áreas del habitáculo", "Tratamiento del sistema de aire acondicionado", "Protector para plásticos", "Acondicionador para piel (cuando aplique)", "Fragancia para interior"],
@@ -64,7 +64,7 @@ const CATALOGO = [
   {
     id: 6, nombre: "Detallado de Motor", cat: "especializado",
     desc: "Limpieza segura del compartimento del motor para mejorar su apariencia y facilitar su mantenimiento.",
-    precios: [499, 549, 599],
+    precios: [599, 649, 699],
     tiempoLabel: ["1:30", "1:45", "2:00"],
     tiempoHoras: [1.5, 1.75, 2.0],
     incluye: ["Protección de componentes sensibles", "Eliminación de grasa, polvo y suciedad", "Limpieza detallada del compartimento del motor", "Secado con aire y microfibra", "Protector para plásticos y hules"],
