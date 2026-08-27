@@ -106,7 +106,10 @@ const MARCAS = [
   { nombre: "Black+Decker", desc: "Hidrolavadora", color: "#1C3A56", logo: "/black-decker.png" },
   { nombre: "Karcher", desc: "Lava-aspiradora", color: "#9C7A3C", logo: "/karcher.png" },
   { nombre: "Koblenz", desc: "Aspiradora", color: "#3F6357", logo: "/koblenz.png" },
-  { nombre: "Infinity Shine", desc: "Productos y recubrimientos", color: "#3A5BFF", logo: "/infinity-shine.png" },
+  { nombre: "Gyeon", desc: "Recubrimientos cerámicos", color: "#0A0A0A", logo: "/gyeon.png" },
+  { nombre: "CarPro", desc: "Descontaminación y detailing", color: "#C0392B", logo: "/carpro.png" },
+  { nombre: "3D", desc: "Productos de detailing", color: "#1C3A56", logo: "/3d.png" },
+  { nombre: "IK", desc: "Productos de pulverización", color: "#3F6357", logo: "/ik.png" },
 ];
 
 const PROMO_VIDEO_URL = "/promo.mp4";
