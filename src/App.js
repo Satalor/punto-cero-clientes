@@ -292,8 +292,7 @@ export default function ClienteApp() {
 
     setAgendaStep(2);
   };
-    setAgendaStep(2);
-  };
+  
 
   const serif = { fontFamily: "'Fraunces', serif" };
   const mono = { fontFamily: "'IBM Plex Mono', monospace" };
