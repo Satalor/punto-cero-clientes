@@ -282,7 +282,16 @@ export default function ClienteApp() {
       setAgendaError("Hubo un problema al guardar tu cita. Intenta de nuevo o contáctanos por WhatsApp.");
       return;
     }
+    if (error) {
+      setAgendaError("Hubo un problema al guardar tu cita. Intenta de nuevo o contáctanos por WhatsApp.");
+      return;
+    }
 
+    const msgWhatsApp = `Hola! Quiero confirmar mi cita:\n\n*Servicio:* ${agenda.servicio}\n*Vehículo:* ${agenda.vehiculo} — ${agenda.marca_modelo}\n*Fecha:* ${agenda.fecha}\n*Hora:* ${agenda.hora}\n*Dirección:* ${agenda.direccion}, ${agenda.zona}, ${agenda.ciudad}\n*Nombre:* ${agenda.nombre}\n*Teléfono:* ${agenda.telefono}${agenda.notas ? `\n*Notas:* ${agenda.notas}` : ""}`;
+    abrirWhatsApp(msgWhatsApp);
+
+    setAgendaStep(2);
+  };
     setAgendaStep(2);
   };
 
